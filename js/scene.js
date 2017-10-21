@@ -8,8 +8,6 @@ var createScene = function () {
   // This creates a Babylon Scene object (not a shape/mesh)
   var scene = new BABYLON.Scene(engine);
   
-
-
   var camera = new BABYLON.FreeCamera("camera1", 
                                       new BABYLON.Vector3(6, 4, -6),
                                       scene);
@@ -56,8 +54,6 @@ var createScene = function () {
   var tiles = []
   for(var x = -10; x < 10; x++) {
     for(var z = -10; z < 10; z++) {
-      console.log("ADD PLANE")
-
       var tile = BABYLON.MeshBuilder.CreatePlane("tile", {width: 1, height: 1, sideOrientation: 0}, scene);
       tile.rotation.x = Math.PI/2;
       tile.position.x = x;
@@ -76,6 +72,24 @@ var createScene = function () {
     tile.material = wireframe_material;
   }
 
+  // GUI
+  var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+  var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Build Habitat");
+  button1.width = "220px"
+  button1.height = "100px";
+  button1.color = "white";
+  button1.cornerRadius = 10;
+  button1.background = "green";
+  button1.onPointerUpObservable.add(function() {
+      alert("you did it!");
+  });
+  advancedTexture.addControl(button1);    
+  button1.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+  button1.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+  button1.paddingLeft = 20
+  button1.paddingBottom = 20
+
 
   // Leave this function
   return scene;
@@ -91,4 +105,16 @@ engine.runRenderLoop(function () {
 // Watch for browser/canvas resize events
 window.addEventListener("resize", function () {
   engine.resize();
+});
+
+//When click event is raised
+window.addEventListener("click", function (evt) {
+  var pickResult = scene.pick(evt.clientX, evt.clientY);
+  var selected_tile = pickResult.pickedMesh;
+
+  var is_selected_material = new BABYLON.StandardMaterial("texture_xxx", scene);
+  is_selected_material.diffuseColor = new BABYLON.Color3(0, 1, 0);
+  is_selected_material.alpha = 0.35;
+
+  selected_tile.material = is_selected_material
 });
