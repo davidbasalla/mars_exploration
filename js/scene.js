@@ -69,32 +69,64 @@ var createScene = function () {
 
   var selected_tile_state = null;
 
+
+  // LOAD HABITAT MODEL
+  var loader = new BABYLON.AssetsManager(scene);
+  var load_task = loader.addMeshTask("habitat_v01", "", "assets/models/", "habitat_v01.obj");
+
+  var habitat = null;
+  load_task.onSuccess = function(task) {
+    console.log("SUCCESS")
+    console.log(task)
+    habitat = task.loadedMeshes[0];
+    habitat.scaling.x = 0.015
+    habitat.scaling.y = 0.015
+    habitat.scaling.z = 0.015
+  }
+
+  load_task.onError = function(task, error) {
+    console.log("FAIL")
+    console.log(task)
+    console.log(error)
+  }
+
+  loader.onFinish = function (tasks) {
+    engine.runRenderLoop(function () {
+      scene.render();
+    });
+  };
+
+  loader.load()
+
+
   // GUI
-  // var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+  var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-  // var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Build Habitat");
-  // button1.width = "220px"
-  // button1.height = "100px";
-  // button1.color = "white";
-  // button1.cornerRadius = 10;
-  // button1.background = "green";
-  // button1.onPointerUpObservable.add(function() {
-  //   console.log("BUILD HABITAT");
+  var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Build Habitat");
+  button1.width = "220px"
+  button1.height = "100px";
+  button1.color = "white";
+  button1.cornerRadius = 10;
+  button1.background = "green";
+  button1.onPointerUpObservable.add(function() {
+    console.log("BUILD HABITAT");
 
-  //   if (selected_tile_state == null) {
-  //     console.log("NOTHING SELECTED");
-  //   }
+    if (selected_tile_state == null) {
+      console.log("NOTHING SELECTED");
+    }
   
-  //   // Create new model at tile position
-  //   var box = BABYLON.MeshBuilder.CreateBox("box", {height: 1}, scene);
-  //   box.position =  selected_tile_state.position;
+    // Create new model at tile position
 
-  // });
-  // advancedTexture.addControl(button1);
-  // button1.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-  // button1.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-  // button1.paddingLeft = 20;
-  // button1.paddingBottom = 20;
+    var newInstance = habitat.createInstance("i1");
+
+    // var box = BABYLON.MeshBuilder.CreateBox("box", {height: 1}, scene);
+    newInstance.position =  selected_tile_state.position;
+  });
+  advancedTexture.addControl(button1);
+  button1.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+  button1.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+  button1.paddingLeft = 20;
+  button1.paddingBottom = 20;
 
 
   //When click event is raised
@@ -115,30 +147,6 @@ var createScene = function () {
     selected_tile_state = selected_tile
   });
 
-
-
-  var loader = new BABYLON.AssetsManager(scene);
-  var load_task = loader.addMeshTask("habitat_v01", "", "assets/models/", "habitat_v01.obj");
-
-  load_task.onSuccess = function(task) {
-    console.log("SUCCESS")
-    console.log(task)
-    task.loadedMeshes[0].scaling.x = 0.015
-    task.loadedMeshes[0].scaling.y = 0.015
-    task.loadedMeshes[0].scaling.z = 0.015
-  }
-
-  load_task.onError = function(task, error) {
-    console.log("FAIL")
-    console.log(task)
-    console.log(error)
-  }
-
-  loader.load()
-
-  // BABYLON.SceneLoader.ImportMesh("batmanface", "batman.obj", scene, function (meshes) { 
-  // //   console.log("BLAH")
-  // });
 
   // Leave this function
   return scene;
