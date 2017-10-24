@@ -3,20 +3,21 @@ var SceneController = function (material_factory, scene_graph) {
   this.scene_graph = scene_graph;
 }
 
-SceneController.prototype.selectItem = function(selected_mesh) {
-  if (selected_mesh == this.scene_graph.ground) {
+SceneController.prototype.selectItem = function(selected_tile) {
+  if (selected_tile == this.scene_graph.ground) {
     return;
   }
 
-  selected_mesh.material = this.material_factory.is_selected_material();
-  this.selected_tile_state = selected_mesh;
+  this.scene_graph.deselect_current_tile();
+  this.scene_graph.select_tile(selected_tile);
 };
 
 SceneController.prototype.buildHabitat = function() {
-  if (this.selected_tile_state == null) {
+  if (this.scene_graph.selected_tile == null) {
     console.log("NOTHING SELECTED");
+    return;
   }
 
   var newInstance = this.scene_graph.habitat_model().createInstance("i1");
-  newInstance.position =  this.selected_tile_state.position;
+  newInstance.position = this.scene_graph.selected_tile.position;
 };

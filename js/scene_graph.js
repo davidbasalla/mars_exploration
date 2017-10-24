@@ -5,6 +5,8 @@ var SceneGraph = function(scene, material_factory){
   this.tiles = [];
   this.ground = null;
   this.original_models = {};
+
+  this.selected_tile = null;
 }
 
 SceneGraph.prototype.load_initial_objects = function(){
@@ -42,13 +44,15 @@ SceneGraph.prototype.load_habitat_model = function(){
   var load_task = loader.addMeshTask("habitat_v01", "", "assets/models/", "habitat_v01.obj");
 
   var habitat = null;
+
+  var _this = this
   load_task.onSuccess = function(task) {
     habitat = task.loadedMeshes[0];
     habitat.scaling.x = 0.015
     habitat.scaling.y = 0.015
     habitat.scaling.z = 0.015
 
-    this.original_models["habitat"] = habitat;
+    _this.original_models["habitat"] = habitat;
   }
 
   load_task.onError = function(task) {
@@ -59,5 +63,25 @@ SceneGraph.prototype.load_habitat_model = function(){
 }
 
 SceneGraph.prototype.habitat_model = function(){
+  console.log(this.original_models)
   return this.original_models["habitat"];
 }
+
+SceneGraph.prototype.deselect_current_tile = function(){
+  if (this.selected_tile == null) {
+    return
+  }
+
+  this.selected_tile.material = this.material_factory.wireframe_material();
+  this.selected_tile = null;
+}
+
+SceneGraph.prototype.select_tile = function(tile){
+  if (!this.tiles.includes(tile)){
+    return
+  }
+
+  tile.material = this.material_factory.is_selected_material();
+  this.selected_tile = tile;
+}
+
