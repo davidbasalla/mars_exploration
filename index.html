@@ -5,10 +5,10 @@
         <title>Explore the Red Planet!</title>
 
         <!-- CUSTOM FORK WITH SUPPORT FOR LOCAL ASSET LOADING -->
-        <script src="js/babylon/babylon.custom.max.js"></script>
+        <script src="js/lib/babylon/babylon.custom.max.js"></script>
 
-        <script src="js/babylon/babylon.gui.js"></script>
-        <script src="js/babylon/babylon.objFileLoader.js"></script>
+        <script src="js/lib/babylon/babylon.gui.js"></script>
+        <script src="js/lib/babylon/babylon.objFileLoader.js"></script>
 
         <style>
             html, body {
@@ -29,6 +29,6 @@
     <body>
         <canvas id="renderCanvas"></canvas>
 
-        <script src="js/scene.js"></script>
+        <script data-main="app.js" src="js/lib/require.js"></script>
     </body>
 </html>
