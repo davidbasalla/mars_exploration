@@ -1,7 +1,13 @@
 var SceneController = function (material_factory, scene_graph) {
   this.material_factory = material_factory;
   this.scene_graph = scene_graph;
+
+  this.gui = null;
 }
+
+SceneController.prototype.setGui = function(gui) {
+  this.gui = gui;
+};
 
 SceneController.prototype.selectItem = function(selected_tile) {
   if (selected_tile == this.scene_graph.ground) {

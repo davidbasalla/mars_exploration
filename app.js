@@ -14,8 +14,9 @@ requirejs.config({
 requirejs(["scene_loader",
            "scene_controller",
            "material_factory",
-           "scene_graph"],
-           function(scene_loader, scene_controller, material_factory, scene_graph) {
+           "scene_graph",
+           "gui"],
+           function(scene_loader, scene_controller, material_factory, scene_graph, gui) {
   //This function is called when scripts/helper/util.js is loaded.
   //If util.js calls define(), then this function is not fired until
   //util's dependencies have loaded, and the util argument will hold

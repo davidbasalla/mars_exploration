@@ -19,7 +19,8 @@ SceneLoader.prototype.call = function(){
   // Set up controller which will interact with scene graph
   var scene_controller = new SceneController(material_factory, scene_graph);
 
-  this.setup_gui(scene_controller)
+  var gui = this.setup_gui(scene_controller)
+  scene_controller.setGui(gui); 
 
   this.setup_click_handler(scene, scene_controller)
 
@@ -58,23 +59,10 @@ SceneLoader.prototype.createLights = function(scene, scene_controller){
 };
 
 SceneLoader.prototype.setup_gui = function(scene_controller){
-  var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-  var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Build Habitat");
-  button1.width = "220px"
-  button1.height = "100px";
-  button1.color = "white";
-  button1.cornerRadius = 10;
-  button1.background = "green";
-  button1.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-  button1.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-  button1.paddingLeft = 20;
-  button1.paddingBottom = 20;
-
-  button1.onPointerUpObservable.add(function() {
-    scene_controller.buildHabitat();
-  });
-  advancedTexture.addControl(button1);
+  var gui = new Gui;
+  gui.setup_energy_text()
+  gui.setup_build_button(scene_controller)
+  return gui;
 };
 
 SceneLoader.prototype.setup_click_handler = function(scene, scene_controller){
