@@ -7,6 +7,8 @@ var SceneGraph = function(scene, material_factory){
   this.original_models = {};
 
   this.selected_tile = null;
+
+  this.energy_count = 50;
 }
 
 SceneGraph.prototype.load_initial_objects = function(){
@@ -63,7 +65,6 @@ SceneGraph.prototype.load_habitat_model = function(){
 }
 
 SceneGraph.prototype.habitat_model = function(){
-  console.log(this.original_models)
   return this.original_models["habitat"];
 }
 

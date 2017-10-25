@@ -24,6 +24,14 @@ SceneController.prototype.buildHabitat = function() {
     return;
   }
 
+  if (this.scene_graph.energy_count < 50){
+    this.gui.flash_energy_warning()
+    return;
+  }
+
+  this.scene_graph.energy_count -= 50;
+  this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
+
   var newInstance = this.scene_graph.habitat_model().createInstance("i1");
   newInstance.position = this.scene_graph.selected_tile.position;
 };

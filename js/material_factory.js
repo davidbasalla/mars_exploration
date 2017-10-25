@@ -12,7 +12,7 @@ MaterialFactory.prototype.is_selected_material = function() {
 MaterialFactory.prototype.wireframe_material = function() {
   var mat = new BABYLON.StandardMaterial("wireframe_texture", this.scene);
   mat.wireframe = true;
-  mat.alpha = 0.5;
+  mat.alpha = 0.15;
   return mat;
 }
 
