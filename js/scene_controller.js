@@ -25,7 +25,8 @@ SceneController.prototype.buildHabitat = function() {
   }
 
   if (this.scene_graph.energy_count < 50){
-    this.gui.flash_energy_warning()
+    this.gui.flash_energy_warning();
+    this.gui.flash_build_button();
     return;
   }
 
@@ -34,4 +35,11 @@ SceneController.prototype.buildHabitat = function() {
 
   var newInstance = this.scene_graph.habitat_model().createInstance("i1");
   newInstance.position = this.scene_graph.selected_tile.position;
+};
+
+SceneController.prototype.endTurn = function() {
+  this.gui.flash_turn_text();
+
+  this.scene_graph.energy_count += 10;
+  this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
 };

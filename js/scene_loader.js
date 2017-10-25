@@ -59,9 +59,11 @@ SceneLoader.prototype.createLights = function(scene, scene_controller){
 };
 
 SceneLoader.prototype.setup_gui = function(scene_controller){
-  var gui = new Gui;
+  var gui = new Gui(scene_controller);
+  gui.setup_turn_text()
   gui.setup_energy_text()
-  gui.setup_build_button(scene_controller)
+  gui.setup_build_button();
+  gui.setup_end_turn_button();
   return gui;
 };
 
