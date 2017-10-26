@@ -9,12 +9,15 @@ var SceneGraph = function(scene, material_factory){
   this.selected_tile = null;
 
   this.energy_count = 50;
+
+  this.loader = new BABYLON.AssetsManager(scene);
 }
 
 SceneGraph.prototype.load_initial_objects = function(){
   this.load_ground();
   this.load_tiles();
   this.load_habitat_model();
+  this.load_solar_panel_model();
 }
 
 SceneGraph.prototype.load_ground = function(){
@@ -40,32 +43,64 @@ SceneGraph.prototype.load_tiles = function(){
   }
 }
 
-// Should use Promises here?
 SceneGraph.prototype.load_habitat_model = function(){
-  var loader = new BABYLON.AssetsManager(this.scene);
-  var load_task = loader.addMeshTask("habitat_v01", "", "assets/models/", "habitat_v01.obj");
-
-  var habitat = null;
+  var load_task = this.loader.addMeshTask("habitat_v01", "", "assets/models/", "habitat_v01.obj");
 
   var _this = this
   load_task.onSuccess = function(task) {
-    habitat = task.loadedMeshes[0];
-    habitat.scaling.x = 0.015
-    habitat.scaling.y = 0.015
-    habitat.scaling.z = 0.015
+    var model = BABYLON.Mesh.MergeMeshes(task.loadedMeshes, true, true)
+    model.scaling.x = 0.015
+    model.scaling.y = 0.015
+    model.scaling.z = 0.015
 
-    _this.original_models["habitat"] = habitat;
+    // move out of screen
+    model.position.x = 10000
+
+    _this.original_models["habitat"] = model;
+
+    _this.create_habitat_instance(new BABYLON.Vector3(0, 0, 1))
   }
 
   load_task.onError = function(task) {
     console.log("FAIL")
   }
 
-  loader.load()
+  this.loader.load()
 }
 
-SceneGraph.prototype.habitat_model = function(){
-  return this.original_models["habitat"];
+SceneGraph.prototype.create_habitat_instance = function(position){
+  var newInstance = this.original_models["habitat"].createInstance("i1");
+  newInstance.position = position;
+}
+
+SceneGraph.prototype.load_solar_panel_model = function(){
+  var load_task = this.loader.addMeshTask("solar_station_v01", "", "assets/models/", "solar_station_v01.obj");
+
+  var _this = this
+  load_task.onSuccess = function(task) {
+    var model = BABYLON.Mesh.MergeMeshes(task.loadedMeshes, true, true)
+    model.scaling.x = 0.005;
+    model.scaling.y = 0.005;
+    model.scaling.z = 0.005;
+
+    // move out of screen
+    model.position.x = 10000
+
+    _this.original_models["solar_panel"] = model;
+
+    _this.create_solar_panel_instance(new BABYLON.Vector3(0, 0, 0))
+  }
+
+  load_task.onError = function(task) {
+    console.log("FAIL")
+  }
+
+  this.loader.load()
+}
+
+SceneGraph.prototype.create_solar_panel_instance = function(position){
+  var newInstance = this.original_models["solar_panel"].createInstance("i1");
+  newInstance.position = position;
 }
 
 SceneGraph.prototype.deselect_current_tile = function(){

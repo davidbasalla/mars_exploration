@@ -33,8 +33,7 @@ SceneController.prototype.buildHabitat = function() {
   this.scene_graph.energy_count -= 50;
   this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
 
-  var newInstance = this.scene_graph.habitat_model().createInstance("i1");
-  newInstance.position = this.scene_graph.selected_tile.position;
+  this.scene_graph.create_habitat_instance(this.scene_graph.selected_tile.position);
 };
 
 SceneController.prototype.endTurn = function() {
