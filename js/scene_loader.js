@@ -20,7 +20,7 @@ SceneLoader.prototype.call = function(){
   var scene_controller = new SceneController(material_factory, scene_graph);
 
   var gui = this.setup_gui(scene_controller)
-  scene_controller.setGui(gui); 
+  scene_controller.setGui(gui);
 
   this.setup_click_handler(scene, scene_controller)
 
@@ -62,7 +62,8 @@ SceneLoader.prototype.setup_gui = function(scene_controller){
   var gui = new Gui(scene_controller);
   gui.setup_turn_text()
   gui.setup_energy_text()
-  gui.setup_build_button();
+  gui.setup_build_habitat_button();
+  gui.setup_build_solar_station_button();
   gui.setup_end_turn_button();
   return gui;
 };

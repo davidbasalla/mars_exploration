@@ -3,42 +3,63 @@ var Gui = function(scene_controller){
 
   this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-  this.build_button = null;
+  this.build_habitat_button = null;
+  this.build_solar_panel_button = null;
   this.end_turn_button = null;
   this.energy_text_field = null;
   this.turn_text_field = null;
 }
 
-Gui.prototype.setup_build_button = function(){
+Gui.prototype.setup_build_habitat_button = function(){
   var btn = BABYLON.GUI.Button.CreateSimpleButton("but1", "Build Habitat (50)");
   btn.width = "220px"
   btn.height = "100px";
   btn.color = "white";
   btn.cornerRadius = 10;
   btn.background = "green";
-  btn.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+  btn.left = -120;
   btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-  btn.paddingLeft = 20;
   btn.paddingBottom = 20;
 
   var _this = this;
   btn.onPointerUpObservable.add(function() {
-    _this.scene_controller.buildHabitat()
+    _this.scene_controller.buildHabitat(btn)
   });
 
   this.advancedTexture.addControl(btn);
 
-  this.build_button = btn;
+  this.build_habitat_button = btn;
 }
 
-Gui.prototype.flash_build_button = function(){
-  this.build_button.background = "red";
+Gui.prototype.flash_build_button = function(btn){
+  btn.background = "red";
 
-  var _this = this;
   setTimeout(function(){
-    _this.build_button.background = "green";
+    btn.background = "green";
     }, 300);
 }
+
+Gui.prototype.setup_build_solar_station_button = function(){
+  var btn = BABYLON.GUI.Button.CreateSimpleButton("ss1", "Build Solar Station (50)");
+  btn.width = "220px"
+  btn.height = "100px";
+  btn.color = "white";
+  btn.cornerRadius = 10;
+  btn.background = "green";
+  btn.left = 120;
+  btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+  btn.paddingBottom = 20;
+
+  var _this = this;
+  btn.onPointerUpObservable.add(function() {
+    _this.scene_controller.buildSolarStation(btn)
+  });
+
+  this.advancedTexture.addControl(btn);
+
+  this.build_solar_station_button = btn;
+}
+
 
 Gui.prototype.setup_end_turn_button = function(){
   var btn = BABYLON.GUI.Button.CreateSimpleButton("but2", "End Turn");
@@ -72,7 +93,7 @@ Gui.prototype.setup_energy_text = function(){
   txt.paddingLeft = 20;
   txt.paddingTop = 20;
 
-  this.advancedTexture.addControl(txt); 
+  this.advancedTexture.addControl(txt);
 
   this.energy_text_field = txt;
 }
@@ -93,21 +114,23 @@ Gui.prototype.setup_turn_text = function(){
   txt.fontSize = 80;
   txt.alpha = 0;
 
-  this.advancedTexture.addControl(txt); 
+  this.advancedTexture.addControl(txt);
 
   this.turn_text_field = txt;
 }
 
 Gui.prototype.flash_turn_text = function(){
   this.turn_text_field.alpha = 1;
-  this.advancedTexture.removeControl(this.build_button); 
-  this.advancedTexture.removeControl(this.end_turn_button); 
+  this.advancedTexture.removeControl(this.build_habitat_button);
+  this.advancedTexture.removeControl(this.build_solar_station_button);
+  this.advancedTexture.removeControl(this.end_turn_button);
 
   var _this = this;
   setTimeout(function(){
     _this.turn_text_field.alpha = 0;
-    _this.advancedTexture.addControl(_this.build_button); 
-    _this.advancedTexture.addControl(_this.end_turn_button); 
+    _this.advancedTexture.addControl(_this.build_habitat_button);
+    _this.advancedTexture.addControl(_this.build_solar_station_button);
+    _this.advancedTexture.addControl(_this.end_turn_button);
 
     }, 1000);
 }

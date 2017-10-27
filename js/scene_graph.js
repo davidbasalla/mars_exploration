@@ -88,7 +88,7 @@ SceneGraph.prototype.load_solar_panel_model = function(){
 
     _this.original_models["solar_panel"] = model;
 
-    _this.create_solar_panel_instance(new BABYLON.Vector3(0, 0, 0))
+    _this.create_solar_station_instance(new BABYLON.Vector3(0, 0, 0))
   }
 
   load_task.onError = function(task) {
@@ -98,7 +98,7 @@ SceneGraph.prototype.load_solar_panel_model = function(){
   this.loader.load()
 }
 
-SceneGraph.prototype.create_solar_panel_instance = function(position){
+SceneGraph.prototype.create_solar_station_instance = function(position){
   var newInstance = this.original_models["solar_panel"].createInstance("i1");
   newInstance.position = position;
 }
