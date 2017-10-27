@@ -8,6 +8,7 @@ var Gui = function(scene_controller){
   this.end_turn_button = null;
   this.energy_text_field = null;
   this.turn_text_field = null;
+  this.labels = [];
 }
 
 Gui.prototype.setup_build_habitat_button = function(){
@@ -109,6 +110,8 @@ Gui.prototype.flash_energy_warning = function(){
 
 Gui.prototype.setup_turn_text = function(){
   var txt = new BABYLON.GUI.TextBlock("turn_text");
+  txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+  txt.paddingTop = 100;
   txt.text = "New Turn";
   txt.color = "white";
   txt.fontSize = 80;
@@ -125,6 +128,10 @@ Gui.prototype.flash_turn_text = function(){
   this.advancedTexture.removeControl(this.build_solar_station_button);
   this.advancedTexture.removeControl(this.end_turn_button);
 
+  for(var i = 0; i < this.labels.length; i++) {
+    this.advancedTexture.addControl(this.labels[i]);
+  }
+
   var _this = this;
   setTimeout(function(){
     _this.turn_text_field.alpha = 0;
@@ -132,5 +139,27 @@ Gui.prototype.flash_turn_text = function(){
     _this.advancedTexture.addControl(_this.build_solar_station_button);
     _this.advancedTexture.addControl(_this.end_turn_button);
 
-    }, 1000);
+    for(var j = 0; j < _this.labels.length; j++) {
+      _this.advancedTexture.removeControl(_this.labels[j]);
+    }
+  }, 1000);
+}
+
+Gui.prototype.create_label = function(mesh){
+  var label = new BABYLON.GUI.Rectangle("label for " + mesh.name);
+  label.height = "30px";
+  label.width = "100px";
+  label.linkOffsetY = -30;
+  label.thickness = 0;
+  this.advancedTexture.addControl(label)
+  label.linkWithMesh(mesh);
+
+  var text1 = new BABYLON.GUI.TextBlock();
+  text1.text = "+10";
+  text1.color = "green";
+  label.addControl(text1);
+
+  this.labels.push(label)
+
+  this.advancedTexture.removeControl(label)
 }

@@ -5,6 +5,10 @@ var SceneGraph = function(scene, material_factory){
   this.tiles = [];
   this.ground = null;
   this.original_models = {};
+  this.buildings = {
+    "habitat": [],
+    "solar_station": [],
+  };
 
   this.selected_tile = null;
 
@@ -71,6 +75,8 @@ SceneGraph.prototype.load_habitat_model = function(){
 SceneGraph.prototype.create_habitat_instance = function(position){
   var newInstance = this.original_models["habitat"].createInstance("i1");
   newInstance.position = position;
+  this.buildings["habitat"].push(newInstance);
+  return newInstance;
 }
 
 SceneGraph.prototype.load_solar_panel_model = function(){
@@ -101,6 +107,8 @@ SceneGraph.prototype.load_solar_panel_model = function(){
 SceneGraph.prototype.create_solar_station_instance = function(position){
   var newInstance = this.original_models["solar_panel"].createInstance("i1");
   newInstance.position = position;
+  this.buildings["solar_station"].push(newInstance);
+  return newInstance;
 }
 
 SceneGraph.prototype.deselect_current_tile = function(){
@@ -121,3 +129,8 @@ SceneGraph.prototype.select_tile = function(tile){
   this.selected_tile = tile;
 }
 
+SceneGraph.prototype.generate_energy = function(){
+  for(var i = 0; i < this.buildings["solar_station"].length; i++){
+    this.energy_count += 10;
+  }
+}

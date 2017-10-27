@@ -51,13 +51,18 @@ SceneController.prototype.buildSolarStation = function(btn) {
   this.scene_graph.energy_count -= 50;
   this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
 
-  this.scene_graph.create_solar_station_instance(this.scene_graph.selected_tile.position);
+  this.createSolarStationInstance(this.scene_graph.selected_tile.position);
 };
+
+SceneController.prototype.createSolarStationInstance = function(position) {
+  var mesh = this.scene_graph.create_solar_station_instance(position);
+  this.gui.create_label(mesh);
+}
 
 SceneController.prototype.endTurn = function() {
   this.scene_graph.deselect_current_tile();
   this.gui.flash_turn_text();
 
-  this.scene_graph.energy_count += 10;
+  this.scene_graph.generate_energy();
   this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
 };

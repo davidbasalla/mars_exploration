@@ -24,6 +24,9 @@ SceneLoader.prototype.call = function(){
 
   this.setup_click_handler(scene, scene_controller)
 
+  // This won't work here as the models haven't loaded yet... need to wait for the loading to finish
+  // scene_controller.createSolarStationInstance(new BABYLON.Vector3(0, 0, 0));
+
   // Register a render loop to repeatedly render the scene
   engine.runRenderLoop(function () {
     scene.render();
