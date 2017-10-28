@@ -26,8 +26,9 @@ SceneLoader.prototype.call = function(){
 
     _this.setup_click_handler(scene, scene_controller)
 
-    scene_controller.createHabitatInstance(new BABYLON.Vector3(0, 0, 1));
-    scene_controller.createSolarStationInstance(new BABYLON.Vector3(0, 0, 0));
+    scene_controller.createHabitatInstance(new BABYLON.Vector3(0, 0, 0));
+    // scene_controller.createSolarStationInstance(new BABYLON.Vector3(0, 0, -1));
+    // scene_controller.createFighterInstance(new BABYLON.Vector3(0, 2, 0));
 
     // Register a render loop to repeatedly render the scene
     engine.runRenderLoop(function () {

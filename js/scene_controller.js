@@ -37,7 +37,11 @@ SceneController.prototype.buildHabitat = function(btn) {
 };
 
 SceneController.prototype.createHabitatInstance = function(position) {
-  this.scene_graph.create_habitat_instance(position);
+  this.scene_graph.create_model_instance("habitat", position);
+}
+
+SceneController.prototype.createFighterInstance = function(position) {
+  this.scene_graph.create_model_instance("fighter", position);
 }
 
 SceneController.prototype.buildSolarStation = function(btn) {
@@ -59,7 +63,7 @@ SceneController.prototype.buildSolarStation = function(btn) {
 };
 
 SceneController.prototype.createSolarStationInstance = function(position) {
-  var mesh = this.scene_graph.create_solar_station_instance(position);
+  var mesh = this.scene_graph.create_model_instance("solar_station", position);
   this.gui.create_label(mesh, SolarStation.energy_gain());
 }
 
