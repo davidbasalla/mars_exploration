@@ -14,28 +14,33 @@ SceneLoader.prototype.call = function(){
 
   // Set up the data layer for the game
   var scene_graph = new SceneGraph(scene, material_factory);
-  scene_graph.load_initial_objects();
+
+  var _this = this;
+  scene_graph.load_initial_objects().then(function(){
+
+    console.log("PROMISES FULFILLED")
+    var scene_controller = new SceneController(material_factory, scene_graph);
+
+    var gui = _this.setup_gui(scene_controller)
+    scene_controller.setGui(gui);
+
+    _this.setup_click_handler(scene, scene_controller)
+
+    scene_controller.createHabitatInstance(new BABYLON.Vector3(0, 0, 1));
+    scene_controller.createSolarStationInstance(new BABYLON.Vector3(0, 0, 0));
+
+    // Register a render loop to repeatedly render the scene
+    engine.runRenderLoop(function () {
+      scene.render();
+    });
+
+    // Watch for browser/canvas resize events
+    window.addEventListener("resize", function () {
+      engine.resize();
+    });
+  });
 
   // Set up controller which will interact with scene graph
-  var scene_controller = new SceneController(material_factory, scene_graph);
-
-  var gui = this.setup_gui(scene_controller)
-  scene_controller.setGui(gui);
-
-  this.setup_click_handler(scene, scene_controller)
-
-  // This won't work here as the models haven't loaded yet... need to wait for the loading to finish
-  // scene_controller.createSolarStationInstance(new BABYLON.Vector3(0, 0, 0));
-
-  // Register a render loop to repeatedly render the scene
-  engine.runRenderLoop(function () {
-    scene.render();
-  });
-
-  // Watch for browser/canvas resize events
-  window.addEventListener("resize", function () {
-    engine.resize();
-  });
 };
 
 SceneLoader.prototype.createCamera = function(scene, canvas){
