@@ -12,6 +12,9 @@ var SceneGraph = function(scene, material_factory){
 
   this.selected_tile = null;
 
+  this.TILE_NUMBER_X = 10;
+  this.TILE_NUMBER_Z = 10;
+
   this.energy_count = 50;
 
   this.loader = new BABYLON.AssetsManager(scene);
@@ -41,8 +44,8 @@ SceneGraph.prototype.load_ground = function(){
 SceneGraph.prototype.load_tiles = function(){
   var wireframe_material = this.material_factory.wireframe_material()
 
-  for(var x = -10; x < 10; x++) {
-    for(var z = -10; z < 10; z++) {
+  for(var x = -this.TILE_NUMBER_X; x < this.TILE_NUMBER_X; x++) {
+    for(var z = -this.TILE_NUMBER_Z; z < this.TILE_NUMBER_Z; z++) {
       var tile = BABYLON.MeshBuilder.CreatePlane("tile", {width: 1, height: 1, sideOrientation: 0}, this.scene);
       tile.rotation.x = Math.PI/2;
       tile.position.x = x;
@@ -62,9 +65,7 @@ SceneGraph.prototype.load_habitat_model = function(){
     var _that = _this
     load_task.onSuccess = function(task) {
       var model = BABYLON.Mesh.MergeMeshes(task.loadedMeshes, true, true)
-      model.scaling.x = 0.015
-      model.scaling.y = 0.015
-      model.scaling.z = 0.015
+      model.scaling = Habitat.model_scaling()
 
       // move out of screen
       model.position.x = 10000
@@ -97,9 +98,7 @@ SceneGraph.prototype.load_solar_panel_model = function(){
     var _that = _this
     load_task.onSuccess = function(task) {
       var model = BABYLON.Mesh.MergeMeshes(task.loadedMeshes, true, true)
-      model.scaling.x = 0.005;
-      model.scaling.y = 0.005;
-      model.scaling.z = 0.005;
+      model.scaling = SolarStation.model_scaling();
 
       // move out of screen
       model.position.x = 10000
@@ -144,6 +143,6 @@ SceneGraph.prototype.select_tile = function(tile){
 
 SceneGraph.prototype.generate_energy = function(){
   for(var i = 0; i < this.buildings["solar_station"].length; i++){
-    this.energy_count += 10;
+    this.energy_count += SolarStation.energy_gain();
   }
 }

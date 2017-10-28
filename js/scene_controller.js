@@ -24,13 +24,13 @@ SceneController.prototype.buildHabitat = function(btn) {
     return;
   }
 
-  if (this.scene_graph.energy_count < 50){
+  if (this.scene_graph.energy_count < Habitat.price()){
     this.gui.flash_energy_warning();
     this.gui.flash_build_button(btn);
     return;
   }
 
-  this.scene_graph.energy_count -= 50;
+  this.scene_graph.energy_count -= Habitat.price();
   this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
 
   this.createHabitatInstance(this.scene_graph.selected_tile.position);
@@ -60,7 +60,7 @@ SceneController.prototype.buildSolarStation = function(btn) {
 
 SceneController.prototype.createSolarStationInstance = function(position) {
   var mesh = this.scene_graph.create_solar_station_instance(position);
-  this.gui.create_label(mesh);
+  this.gui.create_label(mesh, SolarStation.energy_gain());
 }
 
 SceneController.prototype.endTurn = function() {

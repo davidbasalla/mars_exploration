@@ -12,7 +12,7 @@ var Gui = function(scene_controller){
 }
 
 Gui.prototype.setup_build_habitat_button = function(){
-  var btn = BABYLON.GUI.Button.CreateSimpleButton("but1", "Build Habitat (50)");
+  var btn = BABYLON.GUI.Button.CreateSimpleButton("but1", `Build Habitat (${Habitat.price()})`);
   btn.width = "220px"
   btn.height = "100px";
   btn.color = "white";
@@ -41,7 +41,7 @@ Gui.prototype.flash_build_button = function(btn){
 }
 
 Gui.prototype.setup_build_solar_station_button = function(){
-  var btn = BABYLON.GUI.Button.CreateSimpleButton("ss1", "Build Solar Station (50)");
+  var btn = BABYLON.GUI.Button.CreateSimpleButton("ss1", `Build Solar Station (${SolarStation.price()})`);
   btn.width = "220px"
   btn.height = "100px";
   btn.color = "white";
@@ -145,7 +145,7 @@ Gui.prototype.flash_turn_text = function(){
   }, 1000);
 }
 
-Gui.prototype.create_label = function(mesh){
+Gui.prototype.create_label = function(mesh, energy_gain){
   var label = new BABYLON.GUI.Rectangle("label for " + mesh.name);
   label.height = "30px";
   label.width = "100px";
@@ -155,7 +155,7 @@ Gui.prototype.create_label = function(mesh){
   label.linkWithMesh(mesh);
 
   var text1 = new BABYLON.GUI.TextBlock();
-  text1.text = "+10";
+  text1.text = `+${energy_gain}`;
   text1.color = "green";
   label.addControl(text1);
 
