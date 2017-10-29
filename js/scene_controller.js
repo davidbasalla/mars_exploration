@@ -42,7 +42,7 @@ SceneController.prototype.createHabitatInstance = function(position) {
 }
 
 SceneController.prototype.createFighterInstance = function(position) {
-  this.scene_graph.create_model_instance("fighter", position);
+  return this.scene_graph.create_model_instance("fighter", position);
 }
 
 SceneController.prototype.buildSolarStation = function(btn) {

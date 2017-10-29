@@ -12,7 +12,6 @@ var SceneGraph = function(scene, material_factory){
   this.buildings = {
     "habitat": [],
     "solar_station": [],
-    "fighter": [],
   };
 
   this.selected_tile = null;
@@ -35,7 +34,7 @@ SceneGraph.prototype.load_initial_objects = function(){
     var load_promises = [];
     load_promises.push(_this.load_model("habitat", "habitat_v01.obj", Habitat));
     load_promises.push(_this.load_model("solar_station", "solar_station_v01.obj", SolarStation));
-    load_promises.push(_this.load_model("fighter", "Trident-A10.obj", Fighter));
+    load_promises.push(_this.load_single_model("carrier", "Trident-A10.obj", Carrier));
 
     Promise.all(load_promises).then(resolve);
   })
@@ -132,6 +131,35 @@ SceneGraph.prototype.load_model = function(name, file_path, model_class){
   })
 }
 
+SceneGraph.prototype.load_single_model = function(name, file_path, model_class){
+  var _this = this;
+  return new Promise(function(resolve, reject){
+    var load_task = _this.loader.addMeshTask(name, "", "assets/models/", file_path);
+
+    var _that = _this
+    load_task.onSuccess = function(task) {
+      var model = BABYLON.Mesh.MergeMeshes(task.loadedMeshes, true, true)
+      model.scaling = model_class.model_scaling()
+      model.rotation = model_class.model_rotation()
+
+      //offset
+      model.position.x = -0.25;
+      model.position.z = -0.25;
+      model.position.y = 5;
+
+      _that.original_models[name] = model;
+
+      resolve();
+    }
+
+    load_task.onError = function(task) {
+      console.log("FAIL")
+    }
+
+    _this.loader.load()
+  })
+}
+
 SceneGraph.prototype.create_model_instance = function(model_name, position){
   var newInstance = this.original_models[model_name].createInstance("i1");
   newInstance.position = position;
@@ -167,4 +195,40 @@ SceneGraph.prototype.generate_energy = function(){
   for(var i = 0; i < this.buildings["solar_station"].length; i++){
     this.energy_count += SolarStation.energy_gain();
   }
+}
+
+SceneGraph.prototype.carrier_drop = function(){
+  var position_anim = new BABYLON.Animation("carrierDropAnimation",
+                                           "position.y",
+                                           30,
+                                           BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+                                           BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+
+  var rotation_anim = new BABYLON.Animation("carrierDropAnimation",
+                                           "rotation.z",
+                                           30,
+                                           BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+                                           BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+
+  var easingFunction = new BABYLON.QuadraticEase();
+  easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+  position_anim.setEasingFunction(easingFunction);
+  rotation_anim.setEasingFunction(easingFunction);
+
+  var pos_keys = [{ frame: 0, value: 6 },
+                  { frame: 100, value: 0.5 },
+                  { frame: 150, value: 0.5 },
+                  { frame: 250, value: 6 }]
+  position_anim.setKeys(pos_keys);
+
+  var rot_keys = [{ frame: 0, value: 1 },
+                  { frame: 100, value: 0 },
+                  { frame: 150, value: 0 },
+                  { frame: 250, value: -1 }]
+  rotation_anim.setKeys(rot_keys);
+
+  this.original_models["carrier"].animations.push(position_anim);
+  this.original_models["carrier"].animations.push(rotation_anim);
+
+  this.scene.beginAnimation(this.original_models["carrier"], 0, 250, true);
 }
