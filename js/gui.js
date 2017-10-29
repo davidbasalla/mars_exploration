@@ -63,7 +63,7 @@ Gui.prototype.setup_build_solar_station_button = function(){
 
 
 Gui.prototype.setup_end_turn_button = function(){
-  var btn = BABYLON.GUI.Button.CreateSimpleButton("but2", "End Turn");
+  var btn = BABYLON.GUI.Button.CreateSimpleButton("but2", "Next Day");
   btn.width = "220px"
   btn.height = "100px";
   btn.color = "white";
@@ -112,9 +112,9 @@ Gui.prototype.setup_turn_text = function(){
   var txt = new BABYLON.GUI.TextBlock("turn_text");
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
   txt.paddingTop = 100;
-  txt.text = "New Turn";
+  txt.text = "The next day...";
   txt.color = "white";
-  txt.fontSize = 80;
+  txt.fontSize = 60;
   txt.alpha = 0;
 
   this.advancedTexture.addControl(txt);
@@ -124,28 +124,43 @@ Gui.prototype.setup_turn_text = function(){
 
 Gui.prototype.flash_turn_text = function(){
   this.turn_text_field.alpha = 1;
-  this.advancedTexture.removeControl(this.build_habitat_button);
-  this.advancedTexture.removeControl(this.build_solar_station_button);
-  this.advancedTexture.removeControl(this.end_turn_button);
-
-  for(var i = 0; i < this.labels.length; i++) {
-    this.advancedTexture.addControl(this.labels[i]);
-  }
 
   var _this = this;
   setTimeout(function(){
     _this.turn_text_field.alpha = 0;
-    _this.advancedTexture.addControl(_this.build_habitat_button);
-    _this.advancedTexture.addControl(_this.build_solar_station_button);
-    _this.advancedTexture.addControl(_this.end_turn_button);
-
-    for(var j = 0; j < _this.labels.length; j++) {
-      _this.advancedTexture.removeControl(_this.labels[j]);
-    }
   }, 1000);
 }
 
-Gui.prototype.create_label = function(mesh, energy_gain){
+Gui.prototype.show_game_over_text = function(){
+  this.turn_text_field.text = "GAME OVER\n\n(Insufficient energy for life support)"
+  this.turn_text_field.alpha = 1;
+}
+
+Gui.prototype.hide_all_buttons = function(){
+  this.advancedTexture.removeControl(this.build_habitat_button);
+  this.advancedTexture.removeControl(this.build_solar_station_button);
+  this.advancedTexture.removeControl(this.end_turn_button);
+}
+
+Gui.prototype.show_all_buttons = function(){
+  this.advancedTexture.addControl(this.build_habitat_button);
+  this.advancedTexture.addControl(this.build_solar_station_button);
+  this.advancedTexture.addControl(this.end_turn_button);
+}
+
+Gui.prototype.show_all_labels = function(){
+  for(var i = 0; i < this.labels.length; i++) {
+    this.advancedTexture.addControl(this.labels[i]);
+  }
+}
+
+Gui.prototype.hide_all_labels = function(){
+  for(var i = 0; i < this.labels.length; i++) {
+    this.advancedTexture.removeControl(this.labels[i]);
+  }
+}
+
+Gui.prototype.create_label = function(mesh, text, color){
   var label = new BABYLON.GUI.Rectangle("label for " + mesh.name);
   label.height = "30px";
   label.width = "100px";
@@ -155,8 +170,8 @@ Gui.prototype.create_label = function(mesh, energy_gain){
   label.linkWithMesh(mesh);
 
   var text1 = new BABYLON.GUI.TextBlock();
-  text1.text = `+${energy_gain}`;
-  text1.color = "green";
+  text1.text = text;
+  text1.color = color;
   label.addControl(text1);
 
   this.labels.push(label)

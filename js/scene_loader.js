@@ -10,14 +10,11 @@ SceneLoader.prototype.call = function(){
 
   this.createCamera(scene, canvas);
 
-  this.createLights(scene);
-
   // Set up the data layer for the game
   var scene_graph = new SceneGraph(scene, material_factory);
 
   var _this = this;
   scene_graph.load_initial_objects().then(function(){
-
     console.log("PROMISES FULFILLED")
     var scene_controller = new SceneController(material_factory, scene_graph);
 
@@ -28,7 +25,7 @@ SceneLoader.prototype.call = function(){
 
     scene_controller.createHabitatInstance(new BABYLON.Vector3(0, 0, 0));
     // scene_controller.createSolarStationInstance(new BABYLON.Vector3(0, 0, -1));
-    // scene_controller.createFighterInstance(new BABYLON.Vector3(0, 2, 0));
+    scene_graph.carrier_drop();
 
     // Register a render loop to repeatedly render the scene
     engine.runRenderLoop(function () {
@@ -40,8 +37,6 @@ SceneLoader.prototype.call = function(){
       engine.resize();
     });
   });
-
-  // Set up controller which will interact with scene graph
 };
 
 SceneLoader.prototype.createCamera = function(scene, canvas){
@@ -58,13 +53,6 @@ SceneLoader.prototype.createCamera = function(scene, canvas){
   camera.setTarget(BABYLON.Vector3.Zero());
 
   camera.attachControl(canvas, false);
-};
-
-SceneLoader.prototype.createLights = function(scene, scene_controller){
-  var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-  light.intensity = .5;
-
-  var dir_light = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(1, -1, 1), scene);
 };
 
 SceneLoader.prototype.setup_gui = function(scene_controller){

@@ -37,11 +37,12 @@ SceneController.prototype.buildHabitat = function(btn) {
 };
 
 SceneController.prototype.createHabitatInstance = function(position) {
-  this.scene_graph.create_model_instance("habitat", position);
+  var mesh = this.scene_graph.create_model_instance("habitat", position);
+  this.gui.create_label(mesh, `-${Habitat.energy_use()}`, "red");
 }
 
 SceneController.prototype.createFighterInstance = function(position) {
-  this.scene_graph.create_model_instance("fighter", position);
+  return this.scene_graph.create_model_instance("fighter", position);
 }
 
 SceneController.prototype.buildSolarStation = function(btn) {
@@ -50,13 +51,13 @@ SceneController.prototype.buildSolarStation = function(btn) {
     return;
   }
 
-  if (this.scene_graph.energy_count < 50){
+  if (this.scene_graph.energy_count < SolarStation.price()){
     this.gui.flash_energy_warning();
     this.gui.flash_build_button(btn);
     return;
   }
 
-  this.scene_graph.energy_count -= 50;
+  this.scene_graph.energy_count -= SolarStation.price();
   this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
 
   this.createSolarStationInstance(this.scene_graph.selected_tile.position);
@@ -64,13 +65,30 @@ SceneController.prototype.buildSolarStation = function(btn) {
 
 SceneController.prototype.createSolarStationInstance = function(position) {
   var mesh = this.scene_graph.create_model_instance("solar_station", position);
-  this.gui.create_label(mesh, SolarStation.energy_gain());
+  this.gui.create_label(mesh, `+${SolarStation.energy_gain()}`, "green");
 }
 
 SceneController.prototype.endTurn = function() {
-  this.scene_graph.deselect_current_tile();
-  this.gui.flash_turn_text();
-
   this.scene_graph.generate_energy();
+  this.scene_graph.deplete_energy();
   this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
+
+  if (this.scene_graph.energy_count < 0){
+    this.gui.show_game_over_text();
+    this.gui.hide_all_buttons();
+  }
+  else {
+    this.scene_graph.deselect_current_tile();
+
+    this.scene_graph.dim_lights();
+    this.gui.hide_all_buttons();
+    this.gui.show_all_labels();
+
+    var _this = this;
+    setTimeout(function(){
+      _this.gui.flash_turn_text();
+      _this.gui.show_all_buttons();
+      _this.gui.hide_all_labels();
+    }, 1200);
+  }
 };
