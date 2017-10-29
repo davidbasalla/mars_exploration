@@ -7,7 +7,8 @@ var Gui = function(scene_controller){
   this.build_solar_panel_button = null;
   this.end_turn_button = null;
   this.energy_text_field = null;
-  this.turn_text_field = null;
+  this.population_text_field = null;
+  this.main_text_field = null;
   this.labels = [];
 }
 
@@ -26,8 +27,6 @@ Gui.prototype.setup_build_habitat_button = function(){
   btn.onPointerUpObservable.add(function() {
     _this.scene_controller.buildHabitat(btn)
   });
-
-  this.advancedTexture.addControl(btn);
 
   this.build_habitat_button = btn;
 }
@@ -56,8 +55,6 @@ Gui.prototype.setup_build_solar_station_button = function(){
     _this.scene_controller.buildSolarStation(btn)
   });
 
-  this.advancedTexture.addControl(btn);
-
   this.build_solar_station_button = btn;
 }
 
@@ -79,16 +76,29 @@ Gui.prototype.setup_end_turn_button = function(){
     _this.scene_controller.endTurn();
   });
 
-  this.advancedTexture.addControl(btn);
-
   this.end_turn_button = btn;
+}
+
+Gui.prototype.setup_population_text = function(){
+  var txt = new BABYLON.GUI.TextBlock("energy_counter");
+  txt.text = "Population: 0/5";
+  txt.color = "white";
+  txt.fontSize = 22;
+  txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+  txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+  txt.paddingLeft = 20;
+  txt.paddingTop = 50;
+
+  this.advancedTexture.addControl(txt);
+
+  this.population_text_field = txt;
 }
 
 Gui.prototype.setup_energy_text = function(){
   var txt = new BABYLON.GUI.TextBlock("energy_counter");
   txt.text = "Energy: 50";
   txt.color = "white";
-  txt.fontSize = 20;
+  txt.fontSize = 22;
   txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
   txt.paddingLeft = 20;
@@ -119,21 +129,22 @@ Gui.prototype.setup_turn_text = function(){
 
   this.advancedTexture.addControl(txt);
 
-  this.turn_text_field = txt;
+  this.main_text_field = txt;
 }
 
-Gui.prototype.flash_turn_text = function(){
-  this.turn_text_field.alpha = 1;
+Gui.prototype.flash_main_text = function(text){
+  this.main_text_field.alpha = 1;
+  this.main_text_field.text = text;
 
   var _this = this;
   setTimeout(function(){
-    _this.turn_text_field.alpha = 0;
+    _this.main_text_field.alpha = 0;
   }, 1000);
 }
 
 Gui.prototype.show_game_over_text = function(){
-  this.turn_text_field.text = "GAME OVER\n\n(Insufficient energy for life support)"
-  this.turn_text_field.alpha = 1;
+  this.main_text_field.text = "GAME OVER\n\n(Insufficient energy for life support)"
+  this.main_text_field.alpha = 1;
 }
 
 Gui.prototype.hide_all_buttons = function(){

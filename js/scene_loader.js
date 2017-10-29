@@ -25,7 +25,8 @@ SceneLoader.prototype.call = function(){
 
     scene_controller.createHabitatInstance(new BABYLON.Vector3(0, 0, 0));
     // scene_controller.createSolarStationInstance(new BABYLON.Vector3(0, 0, -1));
-    scene_graph.carrier_drop();
+
+    scene_controller.startGame();
 
     // Register a render loop to repeatedly render the scene
     engine.runRenderLoop(function () {
@@ -59,6 +60,7 @@ SceneLoader.prototype.setup_gui = function(scene_controller){
   var gui = new Gui(scene_controller);
   gui.setup_turn_text()
   gui.setup_energy_text()
+  gui.setup_population_text()
   gui.setup_build_habitat_button();
   gui.setup_build_solar_station_button();
   gui.setup_end_turn_button();

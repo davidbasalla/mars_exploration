@@ -68,6 +68,17 @@ SceneController.prototype.createSolarStationInstance = function(position) {
   this.gui.create_label(mesh, `+${SolarStation.energy_gain()}`, "green");
 }
 
+SceneController.prototype.startGame = function() {
+  this.scene_graph.carrier_drop();
+
+  var _this = this;
+  setTimeout(function(){
+    _this.gui.population_text_field.text = 'Population: 1/5';
+    _this.gui.show_all_buttons();
+    _this.gui.flash_main_text("Mission Start");
+  }, 5000);
+}
+
 SceneController.prototype.endTurn = function() {
   this.scene_graph.generate_energy();
   this.scene_graph.deplete_energy();
@@ -86,7 +97,7 @@ SceneController.prototype.endTurn = function() {
 
     var _this = this;
     setTimeout(function(){
-      _this.gui.flash_turn_text();
+      _this.gui.flash_main_text("The next day...");
       _this.gui.show_all_buttons();
       _this.gui.hide_all_labels();
     }, 1200);
