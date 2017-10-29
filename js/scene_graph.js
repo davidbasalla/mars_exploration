@@ -20,8 +20,11 @@ var SceneGraph = function(scene, material_factory){
   this.TILE_NUMBER_Z = 10;
 
   this.energy_count = 50;
+  this.population_count = 0;
 
   this.loader = new BABYLON.AssetsManager(scene);
+
+  this.quests = Quest.quest_list(this);
 }
 
 SceneGraph.prototype.load_initial_objects = function(){
@@ -232,3 +235,16 @@ SceneGraph.prototype.carrier_drop = function(){
 
   this.scene.beginAnimation(this.original_models["carrier"], 0, 250, true);
 }
+
+SceneGraph.prototype.current_quest = function(){
+  return this.quests[this.quests.length - 1];
+}
+
+SceneGraph.prototype.current_quest_is_complete = function(){
+  if(this.current_quest().is_complete() == true){
+    return true;
+  } else {
+    return false;
+  }
+}
+

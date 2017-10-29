@@ -109,6 +109,20 @@ Gui.prototype.setup_energy_text = function(){
   this.energy_text_field = txt;
 }
 
+Gui.prototype.setup_quest_tracker = function(){
+  var txt = new BABYLON.GUI.TextBlock();
+  // if (completed) ☑ else ☐
+  txt.text = "";
+  txt.width = "180px";
+  txt.marginLeft = "5px";
+  txt.fontSize = 22;
+  txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+  txt.color = "white";
+  txt.paddingTop = 20;
+
+  this.quest_tracker = txt;
+}
+
 Gui.prototype.flash_energy_warning = function(){
   this.energy_text_field.color = "red";
 
@@ -118,13 +132,13 @@ Gui.prototype.flash_energy_warning = function(){
     }, 300);
 }
 
-Gui.prototype.setup_turn_text = function(){
-  var txt = new BABYLON.GUI.TextBlock("turn_text");
+Gui.prototype.setup_main_text = function(){
+  var txt = new BABYLON.GUI.TextBlock("main_text");
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
   txt.paddingTop = 100;
   txt.text = "The next day...";
   txt.color = "white";
-  txt.fontSize = 60;
+  txt.fontSize = 50;
   txt.alpha = 0;
 
   this.advancedTexture.addControl(txt);
@@ -143,7 +157,12 @@ Gui.prototype.flash_main_text = function(text){
 }
 
 Gui.prototype.show_game_over_text = function(){
-  this.main_text_field.text = "GAME OVER\n\n(Insufficient energy for life support)"
+  this.main_text_field.text = "GAME OVER\n\n(Insufficient energy for life support)\n\nReload to start again"
+  this.main_text_field.alpha = 1;
+}
+
+Gui.prototype.show_win_text = function(){
+  this.main_text_field.text = "MISSION COMPLETE\n\nYou have successfully built a base on Mars\n\nReload to start again"
   this.main_text_field.alpha = 1;
 }
 
@@ -151,12 +170,17 @@ Gui.prototype.hide_all_buttons = function(){
   this.advancedTexture.removeControl(this.build_habitat_button);
   this.advancedTexture.removeControl(this.build_solar_station_button);
   this.advancedTexture.removeControl(this.end_turn_button);
-}
+ }
 
 Gui.prototype.show_all_buttons = function(){
   this.advancedTexture.addControl(this.build_habitat_button);
   this.advancedTexture.addControl(this.build_solar_station_button);
   this.advancedTexture.addControl(this.end_turn_button);
+  this.advancedTexture.addControl(this.quest_tracker);
+}
+
+Gui.prototype.show_quest_tracker = function(){
+  this.advancedTexture.addControl(this.quest_tracker);
 }
 
 Gui.prototype.show_all_labels = function(){
