@@ -69,17 +69,26 @@ SceneController.prototype.createSolarStationInstance = function(position) {
 }
 
 SceneController.prototype.endTurn = function() {
+  this.scene_graph.generate_energy();
+  this.scene_graph.deplete_energy();
+  this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
+
   if (this.scene_graph.energy_count < 0){
     this.gui.show_game_over_text();
     this.gui.hide_all_buttons();
   }
   else {
     this.scene_graph.deselect_current_tile();
-    this.gui.flash_turn_text();
 
-    this.scene_graph.generate_energy();
-    this.scene_graph.deplete_energy();
+    this.scene_graph.dim_lights();
+    this.gui.hide_all_buttons();
+    this.gui.show_all_labels();
 
-    this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
+    var _this = this;
+    setTimeout(function(){
+      _this.gui.flash_turn_text();
+      _this.gui.show_all_buttons();
+      _this.gui.hide_all_labels();
+    }, 1200);
   }
 };

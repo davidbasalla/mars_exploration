@@ -2,6 +2,10 @@ var SceneGraph = function(scene, material_factory){
   this.scene = scene;
   this.material_factory = material_factory;
 
+  this.lights = {
+    ambient_light: null,
+    directional_light: null,
+  };
   this.tiles = [];
   this.ground = null;
   this.original_models = {};
@@ -24,6 +28,7 @@ var SceneGraph = function(scene, material_factory){
 SceneGraph.prototype.load_initial_objects = function(){
   var _this = this;
   return new Promise(function(resolve, reject){
+    _this.load_lights();
     _this.load_ground();
     _this.load_tiles();
 
@@ -34,6 +39,47 @@ SceneGraph.prototype.load_initial_objects = function(){
 
     Promise.all(load_promises).then(resolve);
   })
+}
+
+SceneGraph.prototype.load_lights = function(){
+  var ambient_light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), this.scene);
+  ambient_light.intensity = 0.6;
+
+  var dir_light = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(1, -1, 1), this.scene);
+  dir_light.intensity = 0.6;
+
+  this.lights = {
+    ambient_light: ambient_light,
+    directional_light: dir_light,
+  };
+};
+
+SceneGraph.prototype.dim_lights = function(){
+  var animationBox = new BABYLON.Animation("myAnimation",
+                                           "intensity",
+                                           30,
+                                           BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+                                           BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  var easingFunction = new BABYLON.SineEase();
+  animationBox.setEasingFunction(easingFunction);
+
+  var keys = [
+    { frame: 0, value: 0.6 },
+    { frame: 15, value: 0.0 },
+    { frame: 20, value: 0.0 },
+    { frame: 35, value: 0.6 },
+  ]
+
+  animationBox.setKeys(keys);
+
+  this.lights["ambient_light"].animations = [];
+  this.lights["ambient_light"].animations.push(animationBox);
+
+  this.lights["directional_light"].animations = [];
+  this.lights["directional_light"].animations.push(animationBox);
+
+
+  this.scene.beginAnimation(this.lights["ambient_light"], 0, 100, true);
 }
 
 SceneGraph.prototype.load_ground = function(){

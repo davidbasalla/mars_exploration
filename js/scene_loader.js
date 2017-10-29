@@ -10,8 +10,6 @@ SceneLoader.prototype.call = function(){
 
   this.createCamera(scene, canvas);
 
-  this.createLights(scene);
-
   // Set up the data layer for the game
   var scene_graph = new SceneGraph(scene, material_factory);
 
@@ -58,13 +56,6 @@ SceneLoader.prototype.createCamera = function(scene, canvas){
   camera.setTarget(BABYLON.Vector3.Zero());
 
   camera.attachControl(canvas, false);
-};
-
-SceneLoader.prototype.createLights = function(scene, scene_controller){
-  var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-  light.intensity = .25;
-
-  var dir_light = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(1, -1, 1), scene);
 };
 
 SceneLoader.prototype.setup_gui = function(scene_controller){
