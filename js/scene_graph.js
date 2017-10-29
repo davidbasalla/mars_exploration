@@ -111,6 +111,12 @@ SceneGraph.prototype.select_tile = function(tile){
   this.selected_tile = tile;
 }
 
+SceneGraph.prototype.deplete_energy = function(){
+  for(var i = 0; i < this.buildings["habitat"].length; i++){
+    this.energy_count -= Habitat.energy_use();
+  }
+}
+
 SceneGraph.prototype.generate_energy = function(){
   for(var i = 0; i < this.buildings["solar_station"].length; i++){
     this.energy_count += SolarStation.energy_gain();

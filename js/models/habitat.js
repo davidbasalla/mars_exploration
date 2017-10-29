@@ -12,3 +12,7 @@ Habitat.model_rotation = function(){
 Habitat.price = function(){
   return 50;
 }
+
+Habitat.energy_use = function(){
+  return 5;
+}

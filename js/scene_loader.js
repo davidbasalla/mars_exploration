@@ -62,7 +62,7 @@ SceneLoader.prototype.createCamera = function(scene, canvas){
 
 SceneLoader.prototype.createLights = function(scene, scene_controller){
   var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-  light.intensity = .5;
+  light.intensity = .25;
 
   var dir_light = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(1, -1, 1), scene);
 };

@@ -10,7 +10,7 @@ SolarStation.model_rotation = function(){
 }
 
 SolarStation.price = function(){
-  return 50;
+  return 25;
 }
 
 SolarStation.energy_gain = function(){

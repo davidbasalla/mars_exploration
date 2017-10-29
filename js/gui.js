@@ -114,7 +114,7 @@ Gui.prototype.setup_turn_text = function(){
   txt.paddingTop = 100;
   txt.text = "New Turn";
   txt.color = "white";
-  txt.fontSize = 80;
+  txt.fontSize = 60;
   txt.alpha = 0;
 
   this.advancedTexture.addControl(txt);
@@ -124,9 +124,7 @@ Gui.prototype.setup_turn_text = function(){
 
 Gui.prototype.flash_turn_text = function(){
   this.turn_text_field.alpha = 1;
-  this.advancedTexture.removeControl(this.build_habitat_button);
-  this.advancedTexture.removeControl(this.build_solar_station_button);
-  this.advancedTexture.removeControl(this.end_turn_button);
+  this.hide_all_buttons();
 
   for(var i = 0; i < this.labels.length; i++) {
     this.advancedTexture.addControl(this.labels[i]);
@@ -145,7 +143,18 @@ Gui.prototype.flash_turn_text = function(){
   }, 1000);
 }
 
-Gui.prototype.create_label = function(mesh, energy_gain){
+Gui.prototype.show_game_over_text = function(){
+  this.turn_text_field.text = "GAME OVER\n\n(Insufficient energy for life support)"
+  this.turn_text_field.alpha = 1;
+}
+
+Gui.prototype.hide_all_buttons = function(){
+  this.advancedTexture.removeControl(this.build_habitat_button);
+  this.advancedTexture.removeControl(this.build_solar_station_button);
+  this.advancedTexture.removeControl(this.end_turn_button);
+}
+
+Gui.prototype.create_label = function(mesh, text, color){
   var label = new BABYLON.GUI.Rectangle("label for " + mesh.name);
   label.height = "30px";
   label.width = "100px";
@@ -155,8 +164,8 @@ Gui.prototype.create_label = function(mesh, energy_gain){
   label.linkWithMesh(mesh);
 
   var text1 = new BABYLON.GUI.TextBlock();
-  text1.text = `+${energy_gain}`;
-  text1.color = "green";
+  text1.text = text;
+  text1.color = color;
   label.addControl(text1);
 
   this.labels.push(label)
