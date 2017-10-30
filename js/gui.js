@@ -14,14 +14,15 @@ var Gui = function(scene_controller){
 
 Gui.prototype.setup_build_habitat_button = function(){
   var btn = BABYLON.GUI.Button.CreateSimpleButton("but1", `Build Habitat (${Habitat.price()})`);
-  btn.width = "220px"
+  btn.width = "250px"
   btn.height = "100px";
-  btn.color = "white";
+  btn.color = ColorManager.white();
   btn.cornerRadius = 10;
-  btn.background = "green";
-  btn.left = -120;
+  btn.background = ColorManager.green();
+  btn.left = -130;
   btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
   btn.paddingBottom = 20;
+  btn.fontSize = 22;
 
   var _this = this;
   btn.onPointerUpObservable.add(function() {
@@ -32,23 +33,24 @@ Gui.prototype.setup_build_habitat_button = function(){
 }
 
 Gui.prototype.flash_build_button = function(btn){
-  btn.background = "red";
+  btn.background = ColorManager.red();
 
   setTimeout(function(){
-    btn.background = "green";
+    btn.background = ColorManager.green();
     }, 300);
 }
 
 Gui.prototype.setup_build_solar_station_button = function(){
   var btn = BABYLON.GUI.Button.CreateSimpleButton("ss1", `Build Solar Station (${SolarStation.price()})`);
-  btn.width = "220px"
+  btn.width = "250px"
   btn.height = "100px";
-  btn.color = "white";
+  btn.color = ColorManager.white();
   btn.cornerRadius = 10;
-  btn.background = "green";
-  btn.left = 120;
+  btn.background = ColorManager.green();
+  btn.left = 130;
   btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
   btn.paddingBottom = 20;
+  btn.fontSize = 22;
 
   var _this = this;
   btn.onPointerUpObservable.add(function() {
@@ -63,13 +65,14 @@ Gui.prototype.setup_end_turn_button = function(){
   var btn = BABYLON.GUI.Button.CreateSimpleButton("but2", "Next Day");
   btn.width = "220px"
   btn.height = "100px";
-  btn.color = "white";
+  btn.color = ColorManager.white();
   btn.cornerRadius = 10;
-  btn.background = "green";
+  btn.background = ColorManager.green();
   btn.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
   btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
   btn.paddingRight = 20;
   btn.paddingBottom = 20;
+  btn.fontSize = 22;
 
   var _this = this;
   btn.onPointerUpObservable.add(function() {
@@ -82,7 +85,7 @@ Gui.prototype.setup_end_turn_button = function(){
 Gui.prototype.setup_population_text = function(){
   var txt = new BABYLON.GUI.TextBlock("energy_counter");
   txt.text = "Population: 0/5";
-  txt.color = "white";
+  txt.color = ColorManager.white();
   txt.fontSize = 22;
   txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -97,7 +100,7 @@ Gui.prototype.setup_population_text = function(){
 Gui.prototype.setup_energy_text = function(){
   var txt = new BABYLON.GUI.TextBlock("energy_counter");
   txt.text = "Energy: 50";
-  txt.color = "white";
+  txt.color = ColorManager.white();
   txt.fontSize = 22;
   txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -113,22 +116,26 @@ Gui.prototype.setup_quest_tracker = function(){
   var txt = new BABYLON.GUI.TextBlock();
   // if (completed) ☑ else ☐
   txt.text = "";
-  txt.width = "180px";
-  txt.marginLeft = "5px";
+  // txt.width = "250px";
+  txt.height = "180px";
+  txt.top = "-320px"
+  // txt.marginLeft = "5px";
   txt.fontSize = 22;
+  txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-  txt.color = "white";
+  txt.color = ColorManager.white();
   txt.paddingTop = 20;
+  txt.paddingRight = 50;
 
   this.quest_tracker = txt;
 }
 
 Gui.prototype.flash_energy_warning = function(){
-  this.energy_text_field.color = "red";
+  this.energy_text_field.color = ColorManager.red();
 
   var _this = this;
   setTimeout(function(){
-    _this.energy_text_field.color = "white";
+    _this.energy_text_field.color = ColorManager.white();
     }, 300);
 }
 
@@ -137,8 +144,8 @@ Gui.prototype.setup_main_text = function(){
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
   txt.paddingTop = 100;
   txt.text = "The next day...";
-  txt.color = "white";
-  txt.fontSize = 50;
+  txt.color = ColorManager.white();
+  txt.fontSize = 44;
   txt.alpha = 0;
 
   this.advancedTexture.addControl(txt);
@@ -204,10 +211,11 @@ Gui.prototype.create_label = function(mesh, text, color){
   this.advancedTexture.addControl(label)
   label.linkWithMesh(mesh);
 
-  var text1 = new BABYLON.GUI.TextBlock();
-  text1.text = text;
-  text1.color = color;
-  label.addControl(text1);
+  var txt = new BABYLON.GUI.TextBlock();
+  txt.text = text;
+  txt.color = color;
+  txt.fontSize = 22;
+  label.addControl(txt);
 
   this.labels.push(label)
 

@@ -38,7 +38,7 @@ SceneController.prototype.buildHabitat = function(btn) {
 
 SceneController.prototype.createHabitatInstance = function(position) {
   var mesh = this.scene_graph.create_model_instance("habitat", position);
-  this.gui.create_label(mesh, `-${Habitat.energy_use()}⚡`, "red");
+  this.gui.create_label(mesh, `-${Habitat.energy_use()}⚡`, "#FF0000");
 }
 
 SceneController.prototype.createFighterInstance = function(position) {
@@ -65,7 +65,7 @@ SceneController.prototype.buildSolarStation = function(btn) {
 
 SceneController.prototype.createSolarStationInstance = function(position) {
   var mesh = this.scene_graph.create_model_instance("solar_station", position);
-  this.gui.create_label(mesh, `+${SolarStation.energy_gain()}⚡️`, "green");
+  this.gui.create_label(mesh, `+${SolarStation.energy_gain()}⚡️`, ColorManager.green());
 }
 
 SceneController.prototype.startGame = function() {
@@ -114,10 +114,14 @@ SceneController.prototype.endTurn = function() {
 
 SceneController.prototype.processQuestProgress = function() {
   if(this.scene_graph.current_quest_is_complete() ==  true){
+
     this.gui.quest_tracker.text = `☑ ${this.scene_graph.current_quest().text}`;
+    this.gui.quest_tracker.color = ColorManager.green();
 
     // CASE STATEMENT FOR DIFFERENT REWARDS
     if(this.scene_graph.current_quest().reward == "increase_population") {
+      this.gui.quest_tracker.text += "\n\n Reward: +1 Population"
+
       this.scene_graph.carrier_drop();
 
       var _this = this;
@@ -131,11 +135,17 @@ SceneController.prototype.processQuestProgress = function() {
 
     // ADVANCE TO NEXT QUEST
     this.scene_graph.quests.pop()
-    this.setNextQuest();
+
+    // WAIT FOR USER TO READ BEFORE SETTING NEW QUEST
+    var _this = this;
+    setTimeout(function(){
+      _this.setNextQuest();
+    }, 5000);
   }
 }
 
 SceneController.prototype.setNextQuest = function() {
+  this.gui.quest_tracker.color = ColorManager.white()
   this.gui.quest_tracker.text = `☐ ${this.scene_graph.current_quest().text}`;
 }
 
