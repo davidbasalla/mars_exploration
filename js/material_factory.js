@@ -4,8 +4,8 @@ var MaterialFactory = function (scene) {
 
 MaterialFactory.prototype.is_selected_material = function() {
   var mat = new BABYLON.StandardMaterial("texture_xxx", this.scene);
-  mat.diffuseColor = new BABYLON.Color3(0, 1, 0);
-  mat.alpha = 0.35;
+  mat.diffuseColor = new BABYLON.Color3(0, 1, 0.4);
+  mat.alpha = 0.4;
   return mat;
 }
 
