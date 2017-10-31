@@ -3,17 +3,21 @@ var Gui = function(scene_controller){
 
   this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-  this.build_habitat_button = null;
-  this.build_solar_panel_button = null;
   this.end_turn_button = null;
-  this.energy_text_field = null;
-  this.population_text_field = null;
   this.main_text_field = null;
+
   this.labels = [];
+
   this.resource_text_fields = {
     energy: null,
     food: null,
     population: null,
+  };
+
+  this.build_button_panel = null;
+  this.build_buttons = {
+    habitat: null,
+    solar_station: null,
   };
 
   this.setup_ui();
@@ -25,29 +29,50 @@ Gui.prototype.setup_ui = function(){
   this.setup_energy_text();
   this.setup_food_text();
   this.setup_population_text()
-  this.setup_build_habitat_button();
-  this.setup_build_solar_station_button();
+  this.setup_build_buttons();
   this.setup_end_turn_button();
 }
 
-Gui.prototype.setup_build_habitat_button = function(){
-  var btn = BABYLON.GUI.Button.CreateSimpleButton("but1", `Build Habitat (${Habitat.price()})`);
-  btn.width = "250px"
-  btn.height = "100px";
-  btn.color = ColorManager.white();
-  btn.cornerRadius = 10;
-  btn.background = ColorManager.green();
-  btn.left = -130;
-  btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-  btn.paddingBottom = 20;
-  btn.fontSize = 22;
+Gui.prototype.setup_build_buttons = function(){
+  var panel = new BABYLON.GUI.StackPanel();
+  panel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+  this.build_button_panel = panel;
 
-  var _this = this;
+  var buttons = [
+    this.setup_build_button('habitat',
+                            `Build Habitat (${Habitat.price()})`,
+                            this.scene_controller.buildHabitat.bind(this.scene_controller)),
+    this.setup_build_button('solar_station',
+                            `Build Solar Station (${SolarStation.price()})`,
+                            this.scene_controller.buildSolarStation.bind(this.scene_controller)),
+    this.setup_build_button('biodome',
+                            `Build Biodome (${Biodome.price()})`,
+                            this.scene_controller.buildBiodome.bind(this.scene_controller)),
+  ]
+
+  for(var i = 0; i < buttons.length; i++) {
+    panel.addControl(buttons[i]);
+  }
+}
+
+Gui.prototype.setup_build_button = function(name, title, callback){
+  var btn = BABYLON.GUI.Button.CreateSimpleButton(name, title);
+  btn.width = "250px"
+  btn.height = "80px";
+  btn.color = ColorManager.white();
+  btn.cornerRadius = 5;
+  btn.background = ColorManager.green();
+  btn.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+  btn.paddingBottom = 10;
+  btn.paddingLeft = 10;
+  btn.fontSize = 20;
+
   btn.onPointerUpObservable.add(function() {
-    _this.scene_controller.buildHabitat(btn)
+    callback(btn)
   });
 
-  this.build_habitat_button = btn;
+  this.build_buttons[name] = btn;
+  return btn;
 }
 
 Gui.prototype.flash_build_button = function(btn){
@@ -58,39 +83,18 @@ Gui.prototype.flash_build_button = function(btn){
     }, 300);
 }
 
-Gui.prototype.setup_build_solar_station_button = function(){
-  var btn = BABYLON.GUI.Button.CreateSimpleButton("ss1", `Build Solar Station (${SolarStation.price()})`);
-  btn.width = "250px"
-  btn.height = "100px";
-  btn.color = ColorManager.white();
-  btn.cornerRadius = 10;
-  btn.background = ColorManager.green();
-  btn.left = 130;
-  btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-  btn.paddingBottom = 20;
-  btn.fontSize = 22;
-
-  var _this = this;
-  btn.onPointerUpObservable.add(function() {
-    _this.scene_controller.buildSolarStation(btn)
-  });
-
-  this.build_solar_station_button = btn;
-}
-
-
 Gui.prototype.setup_end_turn_button = function(){
   var btn = BABYLON.GUI.Button.CreateSimpleButton("but2", "Next Day");
-  btn.width = "220px"
-  btn.height = "100px";
+  btn.width = "250px"
+  btn.height = "80px";
   btn.color = ColorManager.white();
-  btn.cornerRadius = 10;
+  btn.cornerRadius = 5;
   btn.background = ColorManager.green();
   btn.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
   btn.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-  btn.paddingRight = 20;
-  btn.paddingBottom = 20;
-  btn.fontSize = 22;
+  btn.paddingRight = 10;
+  btn.paddingBottom = 10;
+  btn.fontSize = 20;
 
   var _this = this;
   btn.onPointerUpObservable.add(function() {
@@ -116,7 +120,7 @@ Gui.prototype.setup_resource_text = function(name, symbol, padding_top, initial_
   var txt = new BABYLON.GUI.TextBlock(`${name}_counter`);
   txt.text = `${symbol}: ${initial_value} ️`;
   txt.color = ColorManager.white();
-  txt.fontSize = 22;
+  txt.fontSize = 20;
   txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
   txt.paddingLeft = 20;
@@ -147,7 +151,7 @@ Gui.prototype.setup_quest_tracker = function(){
   txt.height = "180px";
   txt.top = "-320px"
   // txt.marginLeft = "5px";
-  txt.fontSize = 22;
+  txt.fontSize = 20;
   txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
   txt.color = ColorManager.white();
@@ -201,14 +205,12 @@ Gui.prototype.show_win_text = function(){
 }
 
 Gui.prototype.hide_all_buttons = function(){
-  this.advancedTexture.removeControl(this.build_habitat_button);
-  this.advancedTexture.removeControl(this.build_solar_station_button);
+  this.advancedTexture.removeControl(this.build_button_panel);
   this.advancedTexture.removeControl(this.end_turn_button);
  }
 
 Gui.prototype.show_all_buttons = function(){
-  this.advancedTexture.addControl(this.build_habitat_button);
-  this.advancedTexture.addControl(this.build_solar_station_button);
+  this.advancedTexture.addControl(this.build_button_panel);
   this.advancedTexture.addControl(this.end_turn_button);
   this.advancedTexture.addControl(this.quest_tracker);
 }
@@ -241,7 +243,7 @@ Gui.prototype.create_label = function(mesh, text, color){
   var txt = new BABYLON.GUI.TextBlock();
   txt.text = text;
   txt.color = color;
-  txt.fontSize = 22;
+  txt.fontSize = 20;
   label.addControl(txt);
 
   this.labels.push(label)

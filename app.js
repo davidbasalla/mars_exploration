@@ -19,9 +19,10 @@ requirejs(["scene_loader",
            "gui",
            "models/habitat",
            "models/solar_station",
+           "models/biodome",
            "models/carrier",
            "models/quest"],
-           function(scene_loader, scene_controller, material_factory, color_manager, scene_graph, gui, habitat, solar_station, carrier, quest) {
+           function(scene_loader, scene_controller, material_factory, color_manager, scene_graph, gui, habitat, solar_station, biodome, carrier, quest) {
   //This function is called when scripts/helper/util.js is loaded.
   //If util.js calls define(), then this function is not fired until
   //util's dependencies have loaded, and the util argument will hold

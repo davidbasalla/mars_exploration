@@ -36,6 +36,24 @@ SceneController.prototype.buildHabitat = function(btn) {
   this.createHabitatInstance(this.scene_graph.selected_tile.position);
 };
 
+SceneController.prototype.buildBiodome = function(btn) {
+  if (this.scene_graph.selected_tile == null) {
+    console.log("NOTHING SELECTED");
+    return;
+  }
+
+  if (this.scene_graph.energy_count < Biodome.price()){
+    this.gui.flash_energy_warning();
+    this.gui.flash_build_button(btn);
+    return;
+  }
+
+  this.scene_graph.energy_count -= Biodome.price();
+  this.gui.set_energy_text(this.scene_graph.energy_count)
+
+  this.createBiodomeInstance(this.scene_graph.selected_tile.position);
+};
+
 SceneController.prototype.createHabitatInstance = function(position) {
   var mesh = this.scene_graph.create_model_instance("habitat", position);
   this.gui.create_label(mesh, `-${Habitat.energy_use()}⚡`, "#FF0000");
@@ -43,6 +61,11 @@ SceneController.prototype.createHabitatInstance = function(position) {
 
 SceneController.prototype.createFighterInstance = function(position) {
   return this.scene_graph.create_model_instance("fighter", position);
+}
+
+SceneController.prototype.createBiodomeInstance = function(position) {
+  var mesh = this.scene_graph.create_model_instance("biodome", position);
+  this.gui.create_label(mesh, `-${Biodome.energy_use()}⚡`, "#FF0000");
 }
 
 SceneController.prototype.buildSolarStation = function(btn) {
@@ -88,10 +111,11 @@ SceneController.prototype.increase_population = function() {
 SceneController.prototype.endTurn = function() {
   this.scene_graph.deplete_energy();
   this.scene_graph.deplete_food();
-  this.gui.set_energy_text(this.scene_graph.energy_count)
-  this.gui.set_food_text(this.scene_graph.food_count)
 
   this.scene_graph.generate_energy();
+
+  this.gui.set_energy_text(this.scene_graph.energy_count)
+  this.gui.set_food_text(this.scene_graph.food_count)
 
   this.processQuestProgress();
 
@@ -111,7 +135,6 @@ SceneController.prototype.endTurn = function() {
 
     var _this = this;
     setTimeout(function(){
-      // _this.gui.flash_main_text("The next day...");
       _this.gui.show_all_buttons();
       _this.gui.hide_all_labels();
     }, 1200);
