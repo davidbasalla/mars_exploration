@@ -24,9 +24,9 @@ Quest.quest_list = function(scene_graph){
                 }
               },
               "win_game"),
-    new Quest("Collect 100⚡️",
+    new Quest("Collect 100🍏",
               function(){
-                if (scene_graph.energy_count >= 100){
+                if (scene_graph.food_count >= 100){
                   return true;
                 } else {
                   return false;

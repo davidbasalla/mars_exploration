@@ -20,6 +20,7 @@ var SceneGraph = function(scene, material_factory){
   this.TILE_NUMBER_Z = 10;
 
   this.energy_count = 50;
+  this.food_count = 50;
   this.population_count = 0;
 
   this.loader = new BABYLON.AssetsManager(scene);
@@ -192,6 +193,10 @@ SceneGraph.prototype.deplete_energy = function(){
   for(var i = 0; i < this.buildings["habitat"].length; i++){
     this.energy_count -= Habitat.energy_use();
   }
+}
+
+SceneGraph.prototype.deplete_food = function(){
+  this.food_count -= this.population_count * 5;
 }
 
 SceneGraph.prototype.generate_energy = function(){

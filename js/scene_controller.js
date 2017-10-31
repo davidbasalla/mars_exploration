@@ -86,17 +86,23 @@ SceneController.prototype.increase_population = function() {
 }
 
 SceneController.prototype.endTurn = function() {
-  this.scene_graph.generate_energy();
   this.scene_graph.deplete_energy();
+  this.scene_graph.deplete_food();
   this.gui.set_energy_text(this.scene_graph.energy_count)
+  this.gui.set_food_text(this.scene_graph.food_count)
+
+  this.scene_graph.generate_energy();
 
   this.processQuestProgress();
 
   if (this.scene_graph.energy_count < 0){
-    this.gui.show_game_over_text();
+    this.gui.show_game_over_text("Insufficient energy (⚡) for life support");
     this.gui.hide_all_buttons();
   }
-  else {
+  else if (this.scene_graph.food_count < 0){
+    this.gui.show_game_over_text("Insufficient food (🍏) for life support");
+    this.gui.hide_all_buttons();
+  } else {
     this.scene_graph.deselect_current_tile();
 
     this.scene_graph.dim_lights();

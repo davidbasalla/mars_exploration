@@ -190,8 +190,8 @@ Gui.prototype.flash_main_text = function(text){
   }, 1000);
 }
 
-Gui.prototype.show_game_over_text = function(){
-  this.main_text_field.text = "GAME OVER\n\n(Insufficient energy for life support)\n\nReload to start again"
+Gui.prototype.show_game_over_text = function(explanation){
+  this.main_text_field.text = `GAME OVER\n\n${explanation}\n\nReload to start again`
   this.main_text_field.alpha = 1;
 }
 
