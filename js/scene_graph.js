@@ -248,3 +248,6 @@ SceneGraph.prototype.current_quest_is_complete = function(){
   }
 }
 
+SceneGraph.prototype.max_population_count = function(){
+  return this.buildings["habitat"].length * 5;
+}

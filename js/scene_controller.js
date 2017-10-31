@@ -31,7 +31,7 @@ SceneController.prototype.buildHabitat = function(btn) {
   }
 
   this.scene_graph.energy_count -= Habitat.price();
-  this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
+  this.gui.set_energy_text(this.scene_graph.energy_count)
 
   this.createHabitatInstance(this.scene_graph.selected_tile.position);
 };
@@ -58,7 +58,7 @@ SceneController.prototype.buildSolarStation = function(btn) {
   }
 
   this.scene_graph.energy_count -= SolarStation.price();
-  this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
+  this.gui.set_energy_text(this.scene_graph.energy_count)
 
   this.createSolarStationInstance(this.scene_graph.selected_tile.position);
 };
@@ -82,13 +82,13 @@ SceneController.prototype.startGame = function() {
 
 SceneController.prototype.increase_population = function() {
   this.scene_graph.population_count += 1;
-  this.gui.population_text_field.text = `Population: ${this.scene_graph.population_count}/5`;
+  this.gui.set_current_population_text(this.scene_graph.population_count, this.scene_graph.max_population_count());
 }
 
 SceneController.prototype.endTurn = function() {
   this.scene_graph.generate_energy();
   this.scene_graph.deplete_energy();
-  this.gui.energy_text_field.text = `Energy: ${this.scene_graph.energy_count}`;
+  this.gui.set_energy_text(this.scene_graph.energy_count)
 
   this.processQuestProgress();
 
@@ -120,7 +120,7 @@ SceneController.prototype.processQuestProgress = function() {
 
     // CASE STATEMENT FOR DIFFERENT REWARDS
     if(this.scene_graph.current_quest().reward == "increase_population") {
-      this.gui.quest_tracker.text += "\n\n Reward: +1 Population"
+      this.gui.quest_tracker.text += "\n\n Reward: +1 👥"
 
       this.scene_graph.carrier_drop();
 

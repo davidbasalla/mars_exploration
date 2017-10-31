@@ -10,6 +10,24 @@ var Gui = function(scene_controller){
   this.population_text_field = null;
   this.main_text_field = null;
   this.labels = [];
+  this.resource_text_fields = {
+    energy: null,
+    food: null,
+    population: null,
+  };
+
+  this.setup_ui();
+}
+
+Gui.prototype.setup_ui = function(){
+  this.setup_main_text()
+  this.setup_quest_tracker();
+  this.setup_energy_text();
+  this.setup_food_text();
+  this.setup_population_text()
+  this.setup_build_habitat_button();
+  this.setup_build_solar_station_button();
+  this.setup_end_turn_button();
 }
 
 Gui.prototype.setup_build_habitat_button = function(){
@@ -82,34 +100,43 @@ Gui.prototype.setup_end_turn_button = function(){
   this.end_turn_button = btn;
 }
 
-Gui.prototype.setup_population_text = function(){
-  var txt = new BABYLON.GUI.TextBlock("energy_counter");
-  txt.text = "Population: 0/5";
-  txt.color = ColorManager.white();
-  txt.fontSize = 22;
-  txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-  txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-  txt.paddingLeft = 20;
-  txt.paddingTop = 50;
-
-  this.advancedTexture.addControl(txt);
-
-  this.population_text_field = txt;
+Gui.prototype.setup_energy_text = function(){
+  this.setup_resource_text('energy', '⚡', 20, 50)
 }
 
-Gui.prototype.setup_energy_text = function(){
-  var txt = new BABYLON.GUI.TextBlock("energy_counter");
-  txt.text = "Energy: 50";
+Gui.prototype.setup_food_text = function(){
+  this.setup_resource_text('food', '🍏', 60, 50)
+}
+
+Gui.prototype.setup_population_text = function(){
+  this.setup_resource_text('population', '👥', 100, "0/5")
+}
+
+Gui.prototype.setup_resource_text = function(name, symbol, padding_top, initial_value){
+  var txt = new BABYLON.GUI.TextBlock(`${name}_counter`);
+  txt.text = `${symbol}: ${initial_value} ️`;
   txt.color = ColorManager.white();
   txt.fontSize = 22;
   txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
   txt.paddingLeft = 20;
-  txt.paddingTop = 20;
+  txt.paddingTop = padding_top;
 
   this.advancedTexture.addControl(txt);
 
-  this.energy_text_field = txt;
+  this.resource_text_fields[name] = txt;
+}
+
+Gui.prototype.set_energy_text = function(amount){
+  this.resource_text_fields["energy"].text = `⚡: ${amount}`;
+}
+
+Gui.prototype.set_food_text = function(amount){
+  this.resource_text_fields["food"].text = `🍏: ${amount}`;
+}
+
+Gui.prototype.set_current_population_text = function(amount, max_amount){
+  this.resource_text_fields["population"].text = `👥: ${amount}/${max_amount}`;
 }
 
 Gui.prototype.setup_quest_tracker = function(){

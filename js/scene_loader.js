@@ -18,7 +18,7 @@ SceneLoader.prototype.call = function(){
     console.log("PROMISES FULFILLED")
     var scene_controller = new SceneController(material_factory, scene_graph);
 
-    var gui = _this.setup_gui(scene_controller)
+    var gui = new Gui(scene_controller);
     scene_controller.setGui(gui);
 
     _this.setup_click_handler(scene, scene_controller)
@@ -55,18 +55,6 @@ SceneLoader.prototype.createCamera = function(scene, canvas){
   camera.setTarget(BABYLON.Vector3.Zero());
 
   camera.attachControl(canvas, false);
-};
-
-SceneLoader.prototype.setup_gui = function(scene_controller){
-  var gui = new Gui(scene_controller);
-  gui.setup_main_text()
-  gui.setup_quest_tracker();
-  gui.setup_energy_text()
-  gui.setup_population_text()
-  gui.setup_build_habitat_button();
-  gui.setup_build_solar_station_button();
-  gui.setup_end_turn_button();
-  return gui;
 };
 
 SceneLoader.prototype.setup_click_handler = function(scene, scene_controller){
