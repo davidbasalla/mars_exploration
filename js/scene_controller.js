@@ -54,20 +54,6 @@ SceneController.prototype.buildBiodome = function(btn) {
   this.createBiodomeInstance(this.scene_graph.selected_tile.position);
 };
 
-SceneController.prototype.createHabitatInstance = function(position) {
-  var mesh = this.scene_graph.create_model_instance("habitat", position);
-  this.gui.create_label(mesh, `-${Habitat.energy_use()}⚡`, "#FF0000");
-}
-
-SceneController.prototype.createFighterInstance = function(position) {
-  return this.scene_graph.create_model_instance("fighter", position);
-}
-
-SceneController.prototype.createBiodomeInstance = function(position) {
-  var mesh = this.scene_graph.create_model_instance("biodome", position);
-  this.gui.create_label(mesh, `-${Biodome.energy_use()}⚡`, "#FF0000");
-}
-
 SceneController.prototype.buildSolarStation = function(btn) {
   if (this.scene_graph.selected_tile == null) {
     console.log("NOTHING SELECTED");
@@ -86,8 +72,18 @@ SceneController.prototype.buildSolarStation = function(btn) {
   this.createSolarStationInstance(this.scene_graph.selected_tile.position);
 };
 
+SceneController.prototype.createHabitatInstance = function(position) {
+  var mesh = this.scene_graph.create_model_instance("habitat", position, Habitat);
+  this.gui.create_label(mesh, `-${Habitat.energy_use()}⚡`, ColorManager.red());
+}
+
+SceneController.prototype.createBiodomeInstance = function(position) {
+  var mesh = this.scene_graph.create_model_instance("biodome", position, Biodome);
+  this.gui.create_label(mesh, `-${Biodome.energy_use()}⚡`, ColorManager.red());
+}
+
 SceneController.prototype.createSolarStationInstance = function(position) {
-  var mesh = this.scene_graph.create_model_instance("solar_station", position);
+  var mesh = this.scene_graph.create_model_instance("solar_station", position, SolarStation);
   this.gui.create_label(mesh, `+${SolarStation.energy_gain()}⚡️`, ColorManager.green());
 }
 

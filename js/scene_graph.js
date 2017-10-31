@@ -12,6 +12,7 @@ var SceneGraph = function(scene, material_factory){
   this.buildings = {
     "habitat": [],
     "solar_station": [],
+    "biodome": [],
   };
 
   this.selected_tile = null;
@@ -38,6 +39,7 @@ SceneGraph.prototype.load_initial_objects = function(){
     var load_promises = [];
     load_promises.push(_this.load_model("habitat", "habitat_v01.obj", Habitat));
     load_promises.push(_this.load_model("solar_station", "solar_station_v01.obj", SolarStation));
+    load_promises.push(_this.load_model("biodome", "biodome_v01.obj", Biodome));
     load_promises.push(_this.load_single_model("carrier", "Trident-A10.obj", Carrier));
 
     Promise.all(load_promises).then(resolve);
@@ -115,12 +117,12 @@ SceneGraph.prototype.load_model = function(name, file_path, model_class){
 
     var _that = _this
     load_task.onSuccess = function(task) {
-      var model = BABYLON.Mesh.MergeMeshes(task.loadedMeshes, true, true)
-      model.scaling = model_class.model_scaling()
+      var model = BABYLON.Mesh.MergeMeshes(task.loadedMeshes, true, true);
+      model.scaling = model_class.model_scaling();
 
       // move out of screen
-      model.rotation = model_class.model_rotation()
-      model.position.x = 10000
+      model.rotation = model_class.model_rotation();
+      model.position.x = 10000;
 
       _that.original_models[name] = model;
 
@@ -164,9 +166,10 @@ SceneGraph.prototype.load_single_model = function(name, file_path, model_class){
   })
 }
 
-SceneGraph.prototype.create_model_instance = function(model_name, position){
+SceneGraph.prototype.create_model_instance = function(model_name, position, model_class){
   var newInstance = this.original_models[model_name].createInstance("i1");
   newInstance.position = position;
+  newInstance.position = newInstance.position.add(model_class.model_offset());
   this.buildings[model_name].push(newInstance);
   return newInstance;
 }

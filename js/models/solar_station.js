@@ -9,6 +9,10 @@ SolarStation.model_rotation = function(){
   return new BABYLON.Vector3(Math.PI*2, Math.PI*2, Math.PI*2);
 }
 
+SolarStation.model_offset = function(){
+  return new BABYLON.Vector3(0, 0, 0);
+}
+
 SolarStation.price = function(){
   return 25;
 }
