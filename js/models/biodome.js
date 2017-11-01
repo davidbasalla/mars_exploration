@@ -10,7 +10,7 @@ Biodome.model_rotation = function(){
 }
 
 Biodome.model_offset = function(){
-  return new BABYLON.Vector3(1.8, 0, -2.15);
+  return new BABYLON.Vector3(1.85, 0, -2.2);
 }
 
 Biodome.price = function(){
@@ -19,4 +19,8 @@ Biodome.price = function(){
 
 Biodome.energy_use = function(){
   return 5;
+}
+
+Biodome.food_gain = function(){
+  return 10;
 }

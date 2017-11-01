@@ -196,15 +196,29 @@ SceneGraph.prototype.deplete_energy = function(){
   for(var i = 0; i < this.buildings["habitat"].length; i++){
     this.energy_count -= Habitat.energy_use();
   }
+
+  for(var i = 0; i < this.buildings["biodome"].length; i++){
+    this.energy_count -= Biodome.energy_use();
+  }
+}
+
+SceneGraph.prototype.food_use = function(){
+  return this.population_count * 5;
 }
 
 SceneGraph.prototype.deplete_food = function(){
-  this.food_count -= this.population_count * 5;
+  this.food_count -= this.food_use();
 }
 
 SceneGraph.prototype.generate_energy = function(){
   for(var i = 0; i < this.buildings["solar_station"].length; i++){
     this.energy_count += SolarStation.energy_gain();
+  }
+}
+
+SceneGraph.prototype.generate_food = function(){
+  for(var i = 0; i < this.buildings["biodome"].length; i++){
+    this.food_count += Biodome.food_gain();
   }
 }
 

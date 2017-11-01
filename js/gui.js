@@ -25,11 +25,11 @@ var Gui = function(scene_controller){
 
 Gui.prototype.setup_ui = function(){
   this.setup_main_text()
-  this.setup_quest_tracker();
   this.setup_energy_text();
   this.setup_food_text();
   this.setup_population_text()
   this.setup_build_buttons();
+  this.setup_quest_tracker();
   this.setup_end_turn_button();
 }
 
@@ -39,15 +39,15 @@ Gui.prototype.setup_build_buttons = function(){
   this.build_button_panel = panel;
 
   var buttons = [
-    this.setup_build_button('habitat',
-                            `Build Habitat (${Habitat.price()})`,
-                            this.scene_controller.buildHabitat.bind(this.scene_controller)),
     this.setup_build_button('solar_station',
                             `Build Solar Station (${SolarStation.price()})`,
                             this.scene_controller.buildSolarStation.bind(this.scene_controller)),
     this.setup_build_button('biodome',
                             `Build Biodome (${Biodome.price()})`,
                             this.scene_controller.buildBiodome.bind(this.scene_controller)),
+    this.setup_build_button('habitat',
+                            `Build Habitat (${Habitat.price()})`,
+                            this.scene_controller.buildHabitat.bind(this.scene_controller)),
   ]
 
   for(var i = 0; i < buttons.length; i++) {
@@ -109,7 +109,7 @@ Gui.prototype.setup_energy_text = function(){
 }
 
 Gui.prototype.setup_food_text = function(){
-  this.setup_resource_text('food', '🍏', 60, 50)
+  this.setup_resource_text('food', '🍎', 60, 50)
 }
 
 Gui.prototype.setup_population_text = function(){
@@ -136,7 +136,7 @@ Gui.prototype.set_energy_text = function(amount){
 }
 
 Gui.prototype.set_food_text = function(amount){
-  this.resource_text_fields["food"].text = `🍏: ${amount}`;
+  this.resource_text_fields["food"].text = `🍎: ${amount}`;
 }
 
 Gui.prototype.set_current_population_text = function(amount, max_amount){
@@ -145,15 +145,14 @@ Gui.prototype.set_current_population_text = function(amount, max_amount){
 
 Gui.prototype.setup_quest_tracker = function(){
   var txt = new BABYLON.GUI.TextBlock();
-  // if (completed) ☑ else ☐
   txt.text = "";
-  // txt.width = "250px";
-  txt.height = "180px";
-  txt.top = "-320px"
-  // txt.marginLeft = "5px";
+  txt.height = "100px";
+  txt.width = "200px"
   txt.fontSize = 20;
-  txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  txt.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+  txt.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
   txt.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+  txt.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
   txt.color = ColorManager.white();
   txt.paddingTop = 20;
   txt.paddingRight = 50;
@@ -162,11 +161,11 @@ Gui.prototype.setup_quest_tracker = function(){
 }
 
 Gui.prototype.flash_energy_warning = function(){
-  this.energy_text_field.color = ColorManager.red();
+  this.resource_text_fields['energy'].color = ColorManager.red();
 
   var _this = this;
   setTimeout(function(){
-    _this.energy_text_field.color = ColorManager.white();
+    _this.resource_text_fields['energy'].color = ColorManager.white();
     }, 300);
 }
 
@@ -216,6 +215,7 @@ Gui.prototype.show_all_buttons = function(){
 }
 
 Gui.prototype.show_quest_tracker = function(){
+  console.log("SHOW QUEST TRACKER")
   this.advancedTexture.addControl(this.quest_tracker);
 }
 
@@ -231,20 +231,28 @@ Gui.prototype.hide_all_labels = function(){
   }
 }
 
-Gui.prototype.create_label = function(mesh, text, color){
+Gui.prototype.create_label = function(mesh, labels){
   var label = new BABYLON.GUI.Rectangle("label for " + mesh.name);
-  label.height = "30px";
-  label.width = "100px";
+  label.height = "100px";
+  label.width = "200px";
   label.linkOffsetY = -30;
   label.thickness = 0;
   this.advancedTexture.addControl(label)
   label.linkWithMesh(mesh);
 
-  var txt = new BABYLON.GUI.TextBlock();
-  txt.text = text;
-  txt.color = color;
-  txt.fontSize = 20;
-  label.addControl(txt);
+  var panel = new BABYLON.GUI.StackPanel();
+
+  for (var j = 0; j < labels.length; j++) {
+    var txt = new BABYLON.GUI.TextBlock();
+    txt.text = labels[j]["text"];
+    txt.width = "100px"
+    txt.height = "25px";
+    txt.color = labels[j]["color"];
+    txt.fontSize = 22;
+    panel.addControl(txt);
+  }
+
+  label.addControl(panel)
 
   this.labels.push(label)
 

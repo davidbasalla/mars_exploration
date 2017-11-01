@@ -14,7 +14,7 @@ Habitat.model_offset = function(){
 }
 
 Habitat.price = function(){
-  return 50;
+  return 100;
 }
 
 Habitat.energy_use = function(){

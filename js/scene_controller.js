@@ -52,7 +52,7 @@ SceneController.prototype.buildBiodome = function(btn) {
   this.gui.set_energy_text(this.scene_graph.energy_count)
 
   this.createBiodomeInstance(this.scene_graph.selected_tile.position);
-};
+}
 
 SceneController.prototype.buildSolarStation = function(btn) {
   if (this.scene_graph.selected_tile == null) {
@@ -70,21 +70,55 @@ SceneController.prototype.buildSolarStation = function(btn) {
   this.gui.set_energy_text(this.scene_graph.energy_count)
 
   this.createSolarStationInstance(this.scene_graph.selected_tile.position);
-};
+}
 
 SceneController.prototype.createHabitatInstance = function(position) {
   var mesh = this.scene_graph.create_model_instance("habitat", position, Habitat);
-  this.gui.create_label(mesh, `-${Habitat.energy_use()}⚡`, ColorManager.red());
+
+  labels = [
+    {
+      text: `-${Habitat.energy_use()} ⚡`,
+      color: ColorManager.red(),
+    },
+    // Skip this for now as it's not straight forward, each habitat would need
+    // to be updated when population grows
+    // {
+    //   text: `-${this.scene_graph.food_use()} 🍎`,
+    //   color: ColorManager.red(),
+    // },
+  ];
+
+  this.gui.create_label(mesh, labels)
 }
 
 SceneController.prototype.createBiodomeInstance = function(position) {
   var mesh = this.scene_graph.create_model_instance("biodome", position, Biodome);
-  this.gui.create_label(mesh, `-${Biodome.energy_use()}⚡`, ColorManager.red());
+
+  labels = [
+    {
+      text: `+${Biodome.food_gain()} 🍎`,
+      color: ColorManager.green(),
+    },
+    {
+      text: `-${Biodome.energy_use()} ⚡`,
+      color: ColorManager.red(),
+    },
+  ];
+
+  this.gui.create_label(mesh, labels);
 }
 
 SceneController.prototype.createSolarStationInstance = function(position) {
   var mesh = this.scene_graph.create_model_instance("solar_station", position, SolarStation);
-  this.gui.create_label(mesh, `+${SolarStation.energy_gain()}⚡️`, ColorManager.green());
+
+  labels = [
+    {
+      text: `+${SolarStation.energy_gain()} ⚡️`,
+      color: ColorManager.green(),
+    },
+  ];
+
+  this.gui.create_label(mesh, labels);
 }
 
 SceneController.prototype.startGame = function() {
@@ -96,7 +130,7 @@ SceneController.prototype.startGame = function() {
     _this.gui.show_all_buttons();
     _this.gui.flash_main_text("Mission Start");
     _this.gui.show_quest_tracker();
-  }, 4500);
+  }, 0);
 }
 
 SceneController.prototype.increase_population = function() {
@@ -109,6 +143,7 @@ SceneController.prototype.endTurn = function() {
   this.scene_graph.deplete_food();
 
   this.scene_graph.generate_energy();
+  this.scene_graph.generate_food();
 
   this.gui.set_energy_text(this.scene_graph.energy_count)
   this.gui.set_food_text(this.scene_graph.food_count)
@@ -120,7 +155,7 @@ SceneController.prototype.endTurn = function() {
     this.gui.hide_all_buttons();
   }
   else if (this.scene_graph.food_count < 0){
-    this.gui.show_game_over_text("Insufficient food (🍏) for life support");
+    this.gui.show_game_over_text("Insufficient food (🍎) for life support");
     this.gui.hide_all_buttons();
   } else {
     this.scene_graph.deselect_current_tile();
@@ -156,6 +191,7 @@ SceneController.prototype.processQuestProgress = function() {
     } else if(this.scene_graph.current_quest().reward == "win_game") {
       this.gui.show_win_text();
       this.gui.hide_all_buttons();
+      return
     }
 
     // ADVANCE TO NEXT QUEST
